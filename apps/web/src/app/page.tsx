@@ -1,4 +1,5 @@
 ﻿import Link from "next/link";
+import { Buildings, IdentificationCard, MapPin, ShieldCheck, UserCircle, UserFocus } from "@phosphor-icons/react/dist/ssr";
 import { getTopRatedDiscovery, getTrendingDiscovery, listCategories, listCities, searchBusinesses } from "@platform/discovery";
 import { Avatar, EmptyState, Eyebrow, InfoCard, Pill, SectionLabel, StatCard, Surface } from "../../../../packages/ui/src";
 import { NavBar } from "../components/nav-bar";
@@ -116,12 +117,12 @@ export default async function HomePage({
               <Eyebrow>Por que a ConfiaNow e diferente</Eyebrow>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginTop: 16 }}>
                 {[
-                  { icon: "🪪", title: "Documentos verificados", desc: "CPF, RG/CNH conferidos em base federal antes de aparecer na busca." },
-                  { icon: "🤳", title: "Biometria facial", desc: "Selfie com documento confirma a identidade em tempo real." },
-                  { icon: "🛡️", title: "Antecedentes checados", desc: "Analise criminal renovada anualmente para manter o selo ativo." },
-                ].map(({ icon, title, desc }) => (
+                  { Icon: IdentificationCard, title: "Documentos verificados", desc: "CPF, RG/CNH conferidos em base federal antes de aparecer na busca." },
+                  { Icon: UserFocus, title: "Biometria facial", desc: "Selfie com documento confirma a identidade em tempo real." },
+                  { Icon: ShieldCheck, title: "Antecedentes checados", desc: "Analise criminal renovada anualmente para manter o selo ativo." },
+                ].map(({ Icon, title, desc }) => (
                   <div key={title} style={{ padding: 16, background: "var(--surface-secondary)", borderRadius: "var(--radius-lg)" }}>
-                    <span style={{ fontSize: 22 }}>{icon}</span>
+                    <Icon size={22} weight="duotone" color="var(--green-primary)" aria-hidden="true" />
                     <p style={{ fontSize: 14, fontWeight: 500, margin: "8px 0 4px", color: "var(--ink)" }}>{title}</p>
                     <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.55 }}>{desc}</p>
                   </div>
@@ -168,7 +169,10 @@ export default async function HomePage({
                 <div style={{ display: "grid", gap: 4 }}>
                   {trending.cities.slice(0, 4).map((city) => (
                     <a key={city.id} href={`/?city=${city.slug}`} className="nav-link" style={{ fontSize: 13, display: "flex", justifyContent: "space-between" }}>
-                      <span>📍 {city.name} - {city.stateCode}</span>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                        <MapPin size={14} weight="duotone" color="var(--green-primary)" aria-hidden="true" />
+                        {city.name} - {city.stateCode}
+                      </span>
                       <span className="tag tag-gray">{city.businessCount}</span>
                     </a>
                   ))}
@@ -204,7 +208,7 @@ export default async function HomePage({
               <div style={{ display: "grid", gap: 8 }}>
                 <InfoCard style={{ padding: 12 }}>
                   <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 6 }}>
-                    <span style={{ fontSize: 16 }}>👤</span>
+                    <UserCircle size={18} weight="duotone" color="var(--green-primary)" aria-hidden="true" />
                     <strong style={{ fontSize: 13, color: "var(--ink)" }}>Sou cliente</strong>
                   </div>
                   <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 10px", lineHeight: 1.5 }}>Busque, compare e contrate prestadores verificados.</p>
@@ -212,7 +216,7 @@ export default async function HomePage({
                 </InfoCard>
                 <InfoCard style={{ padding: 12 }}>
                   <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 6 }}>
-                    <span style={{ fontSize: 16 }}>🏢</span>
+                    <Buildings size={18} weight="duotone" color="var(--green-primary)" aria-hidden="true" />
                     <strong style={{ fontSize: 13, color: "var(--ink)" }}>Sou prestador</strong>
                   </div>
                   <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 10px", lineHeight: 1.5 }}>Publique seu perfil, passe pela verificacao e receba leads.</p>

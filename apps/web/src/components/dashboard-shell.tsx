@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { type PropsWithChildren } from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 
 /* ============================================================
    DashboardShell — layout com sidebar para dashboards
@@ -10,7 +10,7 @@ import { type PropsWithChildren } from "react";
 export interface SidebarLink {
   href: string;
   label: string;
-  icon: string; /* emoji / unicode icon */
+  icon: ReactNode;
   active?: boolean;
 }
 
@@ -129,7 +129,9 @@ export function DashboardShell({
                     href={link.href}
                     className={`sidebar-link${link.active ? " active" : ""}`}
                   >
-                    <span style={{ fontSize: 15, flexShrink: 0 }}>{link.icon}</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", flexShrink: 0 }}>
+                      {link.icon}
+                    </span>
                     {link.label}
                   </Link>
                 ))}
@@ -244,7 +246,9 @@ export function AdminShell({
                       textDecoration: "none",
                     }}
                   >
-                    <span style={{ fontSize: 15, flexShrink: 0 }}>{link.icon}</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", flexShrink: 0 }}>
+                      {link.icon}
+                    </span>
                     {link.label}
                   </Link>
                 ))}

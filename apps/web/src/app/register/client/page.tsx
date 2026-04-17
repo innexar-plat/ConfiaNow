@@ -1,4 +1,5 @@
 ﻿import Link from "next/link";
+import { ClipboardText, MagnifyingGlass, ShieldCheck } from "@phosphor-icons/react/dist/ssr";
 import { AlertBanner, Eyebrow, InfoCard, Surface } from "../../../../../../packages/ui/src";
 import { NavBar } from "../../../components/nav-bar";
 
@@ -23,9 +24,11 @@ export default async function RegisterClientPage({
             </p>
 
             {params.error && (
-              <AlertBanner variant="error" style={{ marginBottom: 20 }}>
-                Nao foi possivel concluir o cadastro. Verifique os dados e tente novamente.
-              </AlertBanner>
+              <div style={{ marginBottom: 20 }}>
+                <AlertBanner variant="error">
+                  Nao foi possivel concluir o cadastro. Verifique os dados e tente novamente.
+                </AlertBanner>
+              </div>
             )}
 
             <form action="/auth/register/client" method="post" style={{ display: "grid", gap: 14 }}>
@@ -70,13 +73,13 @@ export default async function RegisterClientPage({
               <Eyebrow>O que voce ganha</Eyebrow>
               <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
                 {[
-                  { icon: "🔍", title: "Busque prestadores verificados", desc: "Acesse perfis com documentos, biometria e antecedentes checados." },
-                  { icon: "🛡️", title: "Contrate com seguranca", desc: "Nosso sistema garante que voce conhece quem vai ate sua casa." },
-                  { icon: "📋", title: "Acompanhe tudo", desc: "Historico de contatos, reviews e denuncias em um so lugar." },
-                ].map(({ icon, title, desc }) => (
+                  { Icon: MagnifyingGlass, title: "Busque prestadores verificados", desc: "Acesse perfis com documentos, biometria e antecedentes checados." },
+                  { Icon: ShieldCheck, title: "Contrate com seguranca", desc: "Nosso sistema garante que voce conhece quem vai ate sua casa." },
+                  { Icon: ClipboardText, title: "Acompanhe tudo", desc: "Historico de contatos, reviews e denuncias em um so lugar." },
+                ].map(({ Icon, title, desc }) => (
                   <InfoCard key={title} style={{ padding: 14 }}>
                     <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                      <span style={{ fontSize: 20 }}>{icon}</span>
+                      <Icon size={20} weight="duotone" color="var(--green-primary)" aria-hidden="true" />
                       <div>
                         <p style={{ fontSize: 13, fontWeight: 500, margin: "0 0 4px", color: "var(--ink)" }}>{title}</p>
                         <p style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>{desc}</p>

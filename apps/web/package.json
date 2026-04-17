@@ -11,11 +11,12 @@
     "test:coverage": "c8 --reporter=text --reporter=lcov tsx --test src/**/*.test.tsx"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "@platform/analytics": "0.1.0",
     "@platform/auth": "0.1.0",
     "@platform/billing": "0.1.0",
-    "@platform/cms": "0.1.0",
     "@platform/client-dashboard": "0.1.0",
+    "@platform/cms": "0.1.0",
     "@platform/communication": "0.1.0",
     "@platform/config": "0.1.0",
     "@platform/database": "0.1.0",

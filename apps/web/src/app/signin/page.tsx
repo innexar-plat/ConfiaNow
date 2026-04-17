@@ -1,4 +1,5 @@
 ﻿import Link from "next/link";
+import { Buildings, LockKey, UserCircle } from "@phosphor-icons/react/dist/ssr";
 import { getSeededAdminCredentials } from "@platform/auth";
 import { getPublicPlatformConfig } from "../../lib/platform-config";
 import { AlertBanner, Eyebrow, InfoCard, Surface } from "../../../../../packages/ui/src";
@@ -32,9 +33,11 @@ export default async function SignInPage({
             </div>
 
             {params.error && (
-              <AlertBanner variant="error" style={{ marginBottom: 20 }}>
-                Email ou senha invalidos. Verifique suas credenciais e tente novamente.
-              </AlertBanner>
+              <div style={{ marginBottom: 20 }}>
+                <AlertBanner variant="error">
+                  Email ou senha invalidos. Verifique suas credenciais e tente novamente.
+                </AlertBanner>
+              </div>
             )}
 
             <form action="/auth/signin" method="post" style={{ display: "grid", gap: 14 }}>
@@ -61,7 +64,7 @@ export default async function SignInPage({
           <div style={{ display: "grid", gap: 12 }}>
             <InfoCard style={{ padding: 18 }}>
               <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 10 }}>
-                <span style={{ fontSize: 18 }}>🔐</span>
+                <LockKey size={18} weight="duotone" color="var(--green-primary)" aria-hidden="true" />
                 <strong style={{ fontSize: 14, color: "var(--ink)" }}>Acesso administrativo</strong>
               </div>
               <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.55, marginBottom: 10 }}>
@@ -74,7 +77,7 @@ export default async function SignInPage({
 
             <InfoCard lift style={{ padding: 18 }}>
               <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
-                <span style={{ fontSize: 18 }}>👤</span>
+                <UserCircle size={18} weight="duotone" color="var(--green-primary)" aria-hidden="true" />
                 <strong style={{ fontSize: 14, color: "var(--ink)" }}>Sou cliente</strong>
               </div>
               <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.55, marginBottom: 12 }}>
@@ -87,7 +90,7 @@ export default async function SignInPage({
 
             <InfoCard lift style={{ padding: 18 }}>
               <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
-                <span style={{ fontSize: 18 }}>🏢</span>
+                <Buildings size={18} weight="duotone" color="var(--green-primary)" aria-hidden="true" />
                 <strong style={{ fontSize: 14, color: "var(--ink)" }}>Sou prestador</strong>
               </div>
               <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.55, marginBottom: 12 }}>

@@ -1,4 +1,5 @@
 ﻿import Link from "next/link";
+import { ChartLineUp, Megaphone, ShieldCheck, TrayArrowDown } from "@phosphor-icons/react/dist/ssr";
 import { AlertBanner, Eyebrow, InfoCard, Surface } from "../../../../../../packages/ui/src";
 import { NavBar } from "../../../components/nav-bar";
 
@@ -23,9 +24,11 @@ export default async function RegisterBusinessPage({
             </p>
 
             {params.error && (
-              <AlertBanner variant="error" style={{ marginBottom: 20 }}>
-                Nao foi possivel concluir o cadastro. Verifique os dados e tente novamente.
-              </AlertBanner>
+              <div style={{ marginBottom: 20 }}>
+                <AlertBanner variant="error">
+                  Nao foi possivel concluir o cadastro. Verifique os dados e tente novamente.
+                </AlertBanner>
+              </div>
             )}
 
             <form action="/auth/register/business" method="post" style={{ display: "grid", gap: 14 }}>
@@ -74,14 +77,14 @@ export default async function RegisterBusinessPage({
               <Eyebrow>O que voce ganha</Eyebrow>
               <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
                 {[
-                  { icon: "📢", title: "Perfil publico verificado", desc: "Apareca na busca de clientes com o selo de confianca visivel." },
-                  { icon: "📥", title: "Leads qualificados", desc: "Receba solicitacoes de clientes que ja sabem que voce e verificado." },
-                  { icon: "🛡️", title: "Selo ConfiaNow", desc: "Um diferencial competitivo que aumenta sua taxa de conversao." },
-                  { icon: "📈", title: "Painel de performance", desc: "Acompanhe visualizacoes, leads, reviews e seu indice de confianca." },
-                ].map(({ icon, title, desc }) => (
+                  { Icon: Megaphone, title: "Perfil publico verificado", desc: "Apareca na busca de clientes com o selo de confianca visivel." },
+                  { Icon: TrayArrowDown, title: "Leads qualificados", desc: "Receba solicitacoes de clientes que ja sabem que voce e verificado." },
+                  { Icon: ShieldCheck, title: "Selo ConfiaNow", desc: "Um diferencial competitivo que aumenta sua taxa de conversao." },
+                  { Icon: ChartLineUp, title: "Painel de performance", desc: "Acompanhe visualizacoes, leads, reviews e seu indice de confianca." },
+                ].map(({ Icon, title, desc }) => (
                   <InfoCard key={title} style={{ padding: 12 }}>
                     <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                      <span style={{ fontSize: 18 }}>{icon}</span>
+                      <Icon size={18} weight="duotone" color="var(--green-primary)" aria-hidden="true" />
                       <div>
                         <p style={{ fontSize: 13, fontWeight: 500, margin: "0 0 3px", color: "var(--ink)" }}>{title}</p>
                         <p style={{ fontSize: 12, color: "var(--muted)", lineHeight: 1.5, margin: 0 }}>{desc}</p>
