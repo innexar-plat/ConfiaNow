@@ -1,0 +1,496 @@
+
+<style>
+* { box-sizing: border-box; }
+.page { display: none; }
+.page.active { display: block; }
+.G = #1D9E75;
+.nav-tab { padding: 8px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 0.5px solid transparent; transition: all 0.18s ease; color: var(--color-text-secondary); background: transparent; white-space: nowrap; }
+.nav-tab:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
+.nav-tab.active { background: #E1F5EE; color: #0F6E56; border-color: #9FE1CB; font-weight: 500; }
+.tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+.divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.25rem 0; }
+.pchip { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-right: 4px; margin-bottom: 4px; }
+.section-label { font-size: 11px; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 10px; }
+.avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.nav-link { font-size: 13px; color: var(--color-text-secondary); cursor: pointer; padding: 4px 0; }
+.nav-link:hover { color: #1D9E75; }
+.nav-link.highlight { color: #1D9E75; font-weight: 500; }
+.btn-primary { background: #1D9E75; color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+.btn-primary:hover { background: #0F6E56; }
+.btn-ghost { background: transparent; border: 0.5px solid var(--color-border-secondary); border-radius: 8px; padding: 8px 14px; font-size: 13px; cursor: pointer; color: var(--color-text-primary); transition: background 0.15s; }
+.btn-ghost:hover { background: var(--color-background-secondary); }
+.state-bar { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 8px; font-size: 12px; margin-bottom: 14px; }
+</style>
+
+<h2 class="sr-only">Guia de páginas públicas da ConfiaNow — copy, estrutura e estados de navegação para visitante, cliente logado e prestador logado</h2>
+
+<div style="padding: 1rem 0 0;">
+
+  <p class="section-label">Simulador de páginas públicas</p>
+
+  <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px;">
+    <button class="nav-tab active" onclick="showPage('home')">Home</button>
+    <button class="nav-tab" onclick="showPage('busca')">Busca</button>
+    <button class="nav-tab" onclick="showPage('perfil')">Perfil prestador</button>
+    <button class="nav-tab" onclick="showPage('como')">Como funciona</button>
+    <button class="nav-tab" onclick="showPage('seja')">Seja um parceiro</button>
+    <button class="nav-tab" onclick="showPage('sobre')">Sobre / Confiança</button>
+  </div>
+
+  <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem;">
+    <button class="nav-tab" onclick="showState('visitante')" id="st-visitante" style="background:#FAEEDA;color:#854F0B;border-color:#FAC775;font-weight:500;">Visitante</button>
+    <button class="nav-tab" onclick="showState('cliente')" id="st-cliente">Cliente logado</button>
+    <button class="nav-tab" onclick="showState('prestador')" id="st-prestador">Prestador logado</button>
+  </div>
+
+  <div id="state-bar" class="state-bar" style="background:#FAEEDA;border:0.5px solid #FAC775;">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#854F0B" stroke-width="1.2"/><path d="M7 4v3l2 1.5" stroke="#854F0B" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <span id="state-desc" style="color:#854F0B;">Visitante — sem login. Navegação pública completa.</span>
+  </div>
+
+  <div id="page-home" class="page active">
+    <div id="nav-home"></div>
+    <div style="padding: 1.5rem 0 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 1.25rem;">
+      <p style="font-size: 11px; color: #1D9E75; font-weight: 500; margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.06em;">Serviços locais verificados · Baixada Santista</p>
+      <p style="font-size: 26px; font-weight: 500; margin: 0 0 10px; color: var(--color-text-primary); line-height: 1.25;">Encontre quem faz bem feito<br>perto de você.</p>
+      <p style="font-size: 14px; color: var(--color-text-secondary); margin: 0 0 16px; line-height: 1.6; max-width: 520px;">Todo profissional aqui passou por verificação de documentos, biometria facial e checagem de antecedentes. Sem chute. Sem risco.</p>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+        <select style="flex:1;min-width:160px;padding:9px 12px;border-radius:8px;border:0.5px solid var(--color-border-secondary);font-size:13px;background:var(--color-background-primary);color:var(--color-text-primary);">
+          <option>O que você precisa?</option>
+          <option>Eletricista</option><option>Encanador</option><option>Diarista</option><option>Pintor</option><option>Técnico em informática</option>
+        </select>
+        <select style="flex:1;min-width:140px;padding:9px 12px;border-radius:8px;border:0.5px solid var(--color-border-secondary);font-size:13px;background:var(--color-background-primary);color:var(--color-text-primary);">
+          <option>Sua cidade</option>
+          <option>Praia Grande</option><option>Santos</option><option>São Vicente</option><option>Guarujá</option>
+        </select>
+        <button class="btn-primary" style="padding:9px 20px;">Buscar</button>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Eletricista</span>
+        <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Encanador</span>
+        <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Diarista</span>
+        <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Pintor</span>
+        <span class="tag" style="background:var(--color-background-secondary);color:var(--color-text-secondary);">+ 40 categorias</span>
+      </div>
+    </div>
+    <div style="margin-bottom: 1.25rem;">
+      <p class="section-label">Por que a ConfiaNow é diferente</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+        <div style="padding: 12px; background: var(--color-background-secondary); border-radius: 8px;">
+          <div style="width: 28px; height: 28px; background: #E1F5EE; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="2,7 5.5,10.5 12,4" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <p style="font-size: 13px; font-weight: 500; margin: 0 0 4px; color: var(--color-text-primary);">Verificação real</p>
+          <p style="font-size: 12px; color: var(--color-text-secondary); margin: 0; line-height: 1.5;">CPF, documento com foto, biometria facial e antecedentes. Cada um.</p>
+        </div>
+        <div style="padding: 12px; background: var(--color-background-secondary); border-radius: 8px;">
+          <div style="width: 28px; height: 28px; background: #E1F5EE; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1l1.5 3.5L12 5l-2.5 2.5.6 3.5L7 9.5 3.9 11l.6-3.5L2 5l3.5-.5z" stroke="#0F6E56" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          </div>
+          <p style="font-size: 13px; font-weight: 500; margin: 0 0 4px; color: var(--color-text-primary);">Avaliações com prova</p>
+          <p style="font-size: 12px; color: var(--color-text-secondary); margin: 0; line-height: 1.5;">Fotos de antes e depois. Comentários moderados. Sem fake.</p>
+        </div>
+        <div style="padding: 12px; background: var(--color-background-secondary); border-radius: 8px;">
+          <div style="width: 28px; height: 28px; background: #E1F5EE; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5C4 1.5 1.5 4 1.5 7s2.5 5.5 5.5 5.5S12.5 10 12.5 7" stroke="#0F6E56" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v3h3" stroke="#0F6E56" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <p style="font-size: 13px; font-weight: 500; margin: 0 0 4px; color: var(--color-text-primary);">Resposta rápida</p>
+          <p style="font-size: 12px; color: var(--color-text-secondary); margin: 0; line-height: 1.5;">Prestadores ativos respondem em menos de 4 horas.</p>
+        </div>
+      </div>
+    </div>
+    <div style="margin-bottom: 1rem;">
+      <p class="section-label">Profissionais em destaque</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="card">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <div class="avatar" style="background:#E1F5EE;color:#0F6E56;">CR</div>
+            <div><p style="font-size: 13px; font-weight: 500; margin: 0; color: var(--color-text-primary);">Carlos Ribeiro</p><p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Eletricista · Praia Grande</p></div>
+            <div style="margin-left:auto;width:18px;height:18px;background:#1D9E75;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="#fff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
+            <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Verificado</span>
+            <span class="tag" style="background:#FAEEDA;color:#854F0B;">Destaque</span>
+            <span class="tag" style="background:var(--color-background-secondary);color:var(--color-text-secondary);">4.9 · 38 aval.</span>
+          </div>
+          <div id="cta-card-1"></div>
+        </div>
+        <div class="card">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <div class="avatar" style="background:#E6F1FB;color:#185FA5;">MS</div>
+            <div><p style="font-size: 13px; font-weight: 500; margin: 0; color: var(--color-text-primary);">Maria Santos</p><p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Diarista · Santos</p></div>
+            <div style="margin-left:auto;width:18px;height:18px;background:#1D9E75;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="#fff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
+            <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Verificada</span>
+            <span class="tag" style="background:var(--color-background-secondary);color:var(--color-text-secondary);">4.7 · 21 aval.</span>
+          </div>
+          <div id="cta-card-2"></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding: 14px 16px; background: #E1F5EE; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+      <div>
+        <p style="font-size: 14px; font-weight: 500; margin: 0 0 2px; color: #085041;">É prestador de serviços?</p>
+        <p style="font-size: 12px; color: #0F6E56; margin: 0;">Junte-se a quem já é verificado e recebe leads qualificados.</p>
+      </div>
+      <button class="btn-primary" style="flex-shrink:0;" onclick="showPage('seja'); setNavTab('seja')">Quero ser parceiro</button>
+    </div>
+  </div>
+
+  <div id="page-busca" class="page">
+    <div id="nav-busca"></div>
+    <p style="font-size: 20px; font-weight: 500; margin: 1rem 0 4px; color: var(--color-text-primary);">Eletricistas em Praia Grande</p>
+    <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0 0 1rem;">12 profissionais verificados encontrados</p>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem;">
+      <span class="tag" style="background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer;">Todos</span>
+      <span class="tag" style="background:#E1F5EE;color:#0F6E56;cursor:pointer;">Verificados</span>
+      <span class="tag" style="background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer;">Melhor avaliados</span>
+      <span class="tag" style="background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer;">Resposta rápida</span>
+      <span class="tag" style="background:#FAEEDA;color:#854F0B;cursor:pointer;">Em destaque</span>
+    </div>
+    <div style="display: grid; gap: 10px;">
+      <div class="card" style="display:flex;gap:12px;align-items:flex-start;">
+        <div class="avatar" style="background:#E1F5EE;color:#0F6E56;width:44px;height:44px;">CR</div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;">
+            <p style="font-size:14px;font-weight:500;margin:0;color:var(--color-text-primary);">Carlos Ribeiro</p>
+            <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Verificado</span>
+            <span class="tag" style="background:#FAEEDA;color:#854F0B;">Destaque</span>
+          </div>
+          <p style="font-size:12px;color:var(--color-text-secondary);margin:0 0 6px;">Eletricista · Praia Grande · Responde em ~2h</p>
+          <p style="font-size:12px;color:var(--color-text-secondary);margin:0 0 8px;line-height:1.5;">Instalações, manutenção e laudos. Atende toda a Baixada Santista. 14 anos de experiência.</p>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+            <span style="font-size:12px;color:var(--color-text-secondary);">4.9 · 38 avaliações</span>
+            <div id="cta-busca-1"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="display:flex;gap:12px;align-items:flex-start;">
+        <div class="avatar" style="background:#EEEDFE;color:#534AB7;width:44px;height:44px;">RA</div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;">
+            <p style="font-size:14px;font-weight:500;margin:0;color:var(--color-text-primary);">Roberto Alves</p>
+            <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Verificado</span>
+          </div>
+          <p style="font-size:12px;color:var(--color-text-secondary);margin:0 0 6px;">Eletricista · Praia Grande · Responde em ~4h</p>
+          <p style="font-size:12px;color:var(--color-text-secondary);margin:0 0 8px;line-height:1.5;">Especialista em instalações residenciais e CFTV. Orçamento sem compromisso.</p>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+            <span style="font-size:12px;color:var(--color-text-secondary);">4.6 · 17 avaliações</span>
+            <div id="cta-busca-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="busca-cta-login" style="display:none;margin-top:1rem;padding:14px;background:#E6F1FB;border-radius:8px;border-left:3px solid #378ADD;border-radius:0;">
+      <p style="font-size:13px;font-weight:500;margin:0 0 2px;color:#185FA5;">Quer entrar em contato?</p>
+      <p style="font-size:12px;color:#378ADD;margin:0;">Crie sua conta grátis para enviar mensagem ao prestador.</p>
+    </div>
+  </div>
+
+  <div id="page-perfil" class="page">
+    <div id="nav-perfil"></div>
+    <div style="margin-top:1rem;">
+      <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:1rem;flex-wrap:wrap;">
+        <div class="avatar" style="background:#E1F5EE;color:#0F6E56;width:56px;height:56px;font-size:18px;">CR</div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+            <p style="font-size:18px;font-weight:500;margin:0;color:var(--color-text-primary);">Carlos Ribeiro</p>
+            <div style="width:20px;height:20px;background:#1D9E75;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><polyline points="2,5.5 4.5,8 9,3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 6px;">Eletricista · Praia Grande, SP · Membro desde jan/2024</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="tag" style="background:#E1F5EE;color:#0F6E56;">CPF verificado</span>
+            <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Biometria facial</span>
+            <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Antecedentes limpos</span>
+            <span class="tag" style="background:#FAEEDA;color:#854F0B;">Parceiro destaque</span>
+          </div>
+        </div>
+        <div id="cta-perfil" style="flex-shrink:0;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1rem;">
+        <div style="padding:10px;background:var(--color-background-secondary);border-radius:8px;text-align:center;">
+          <p style="font-size:20px;font-weight:500;margin:0;color:var(--color-text-primary);">38</p>
+          <p style="font-size:11px;color:var(--color-text-secondary);margin:0;">Avaliações</p>
+        </div>
+        <div style="padding:10px;background:var(--color-background-secondary);border-radius:8px;text-align:center;">
+          <p style="font-size:20px;font-weight:500;margin:0;color:var(--color-text-primary);">4.9</p>
+          <p style="font-size:11px;color:var(--color-text-secondary);margin:0;">Nota média</p>
+        </div>
+        <div style="padding:10px;background:var(--color-background-secondary);border-radius:8px;text-align:center;">
+          <p style="font-size:20px;font-weight:500;margin:0;color:var(--color-text-primary);">&lt;2h</p>
+          <p style="font-size:11px;color:var(--color-text-secondary);margin:0;">Resp. média</p>
+        </div>
+      </div>
+      <hr class="divider">
+      <p class="section-label">Sobre</p>
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin:0 0 1rem;">Eletricista há 14 anos, atendo residências e comércios na Baixada Santista. Faço instalações, manutenção preventiva e laudos técnicos. Trabalho com nota fiscal e garantia de 90 dias nos serviços.</p>
+      <hr class="divider">
+      <p class="section-label">Avaliações recentes</p>
+      <div style="display:grid;gap:8px;">
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <div class="avatar" style="background:var(--color-background-secondary);color:var(--color-text-secondary);width:28px;height:28px;font-size:11px;">JM</div>
+            <p style="font-size:13px;font-weight:500;margin:0;color:var(--color-text-primary);">João M.</p>
+            <span style="font-size:11px;color:var(--color-text-secondary);margin-left:auto;">há 3 dias</span>
+          </div>
+          <p style="font-size:12px;color:var(--color-text-secondary);margin:0;line-height:1.5;">Resolveu um problema que outro eletricista não conseguiu. Pontual, limpo e explicou tudo direitinho. Recomendo muito.</p>
+        </div>
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <div class="avatar" style="background:var(--color-background-secondary);color:var(--color-text-secondary);width:28px;height:28px;font-size:11px;">PL</div>
+            <p style="font-size:13px;font-weight:500;margin:0;color:var(--color-text-primary);">Patricia L.</p>
+            <span style="font-size:11px;color:var(--color-text-secondary);margin-left:auto;">há 1 semana</span>
+          </div>
+          <p style="font-size:12px;color:var(--color-text-secondary);margin:0;line-height:1.5;">Instalou o ar-condicionado e ainda ajustou a fiação da sala sem cobrar a mais. Ótimo profissional.</p>
+        </div>
+      </div>
+      <div id="perfil-review-cta" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <div id="page-como" class="page">
+    <div id="nav-como"></div>
+    <p style="font-size:20px;font-weight:500;margin:1rem 0 6px;color:var(--color-text-primary);">Como a ConfiaNow funciona</p>
+    <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 1.25rem;line-height:1.6;">A gente sabe que contratar alguém sem conhecer dá medo. Por isso criamos um processo de verificação que vai muito além de um cadastro comum.</p>
+    <p class="section-label">Para quem precisa de serviço</p>
+    <div style="display:grid;gap:8px;margin-bottom:1.25rem;">
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:28px;height:28px;background:#E1F5EE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#0F6E56;flex-shrink:0;">1</div>
+        <div><p style="font-size:13px;font-weight:500;margin:0 0 2px;color:var(--color-text-primary);">Busque pelo que precisa</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Digite a categoria e sua cidade. Só aparecem profissionais verificados.</p></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:28px;height:28px;background:#E1F5EE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#0F6E56;flex-shrink:0;">2</div>
+        <div><p style="font-size:13px;font-weight:500;margin:0 0 2px;color:var(--color-text-primary);">Compare com segurança</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Veja o perfil completo, avaliações reais e fotos dos trabalhos anteriores.</p></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:28px;height:28px;background:#E1F5EE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#0F6E56;flex-shrink:0;">3</div>
+        <div><p style="font-size:13px;font-weight:500;margin:0 0 2px;color:var(--color-text-primary);">Entre em contato direto</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Mande sua solicitação pelo chat. O prestador responde diretamente pra você.</p></div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="section-label">Para prestadores</p>
+    <div style="display:grid;gap:8px;margin-bottom:1.25rem;">
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:28px;height:28px;background:#FAEEDA;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#854F0B;flex-shrink:0;">1</div>
+        <div><p style="font-size:13px;font-weight:500;margin:0 0 2px;color:var(--color-text-primary);">Crie seu perfil</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Preencha seus dados, área de atuação e portfólio.</p></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:28px;height:28px;background:#FAEEDA;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#854F0B;flex-shrink:0;">2</div>
+        <div><p style="font-size:13px;font-weight:500;margin:0 0 2px;color:var(--color-text-primary);">Passe pela verificação</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Documentos, biometria e antecedentes. Feito uma vez, vale enquanto estiver ativo.</p></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:28px;height:28px;background:#FAEEDA;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#854F0B;flex-shrink:0;">3</div>
+        <div><p style="font-size:13px;font-weight:500;margin:0 0 2px;color:var(--color-text-primary);">Receba leads qualificados</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Clientes reais, que já viram seu perfil e escolheram você. Sem tráfego genérico.</p></div>
+      </div>
+    </div>
+    <div style="padding:14px;background:#E1F5EE;border-radius:8px;border-left:3px solid #1D9E75;border-radius:0;">
+      <p style="font-size:13px;font-weight:500;margin:0 0 2px;color:#085041;">Por que isso funciona?</p>
+      <p style="font-size:12px;color:#0F6E56;margin:0;line-height:1.5;">Porque a confiança é dos dois lados. O cliente sabe com quem está falando. O prestador sabe que o lead é sério. É o oposto do grupo de WhatsApp.</p>
+    </div>
+  </div>
+
+  <div id="page-seja" class="page">
+    <div id="nav-seja"></div>
+    <p style="font-size:20px;font-weight:500;margin:1rem 0 6px;color:var(--color-text-primary);">Seja um parceiro ConfiaNow</p>
+    <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 1.25rem;line-height:1.6;">Se você faz um bom trabalho, a ConfiaNow coloca isso à vista de quem precisa. Sem precisar de anúncio caro nem depender de indicação.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem;">
+      <div style="padding:14px;background:var(--color-background-secondary);border-radius:8px;">
+        <p style="font-size:22px;font-weight:500;margin:0 0 2px;color:var(--color-text-primary);">+200</p>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin:0;">profissionais verificados</p>
+      </div>
+      <div style="padding:14px;background:var(--color-background-secondary);border-radius:8px;">
+        <p style="font-size:22px;font-weight:500;margin:0 0 2px;color:var(--color-text-primary);">4.8</p>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin:0;">nota média da plataforma</p>
+      </div>
+      <div style="padding:14px;background:var(--color-background-secondary);border-radius:8px;">
+        <p style="font-size:22px;font-weight:500;margin:0 0 2px;color:var(--color-text-primary);">+1.200</p>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin:0;">leads gerados esse mês</p>
+      </div>
+      <div style="padding:14px;background:var(--color-background-secondary);border-radius:8px;">
+        <p style="font-size:22px;font-weight:500;margin:0 0 2px;color:var(--color-text-primary);">&lt;48h</p>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin:0;">tempo médio de verificação</p>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="section-label">O que você ganha sendo verificado</p>
+    <div style="display:grid;gap:8px;margin-bottom:1.25rem;">
+      <div style="display:flex;gap:8px;align-items:flex-start;">
+        <div style="width:18px;height:18px;background:#E1F5EE;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="#0F6E56" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p style="font-size:13px;color:var(--color-text-secondary);margin:0;line-height:1.5;">Perfil profissional público com portfólio e avaliações reais</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-start;">
+        <div style="width:18px;height:18px;background:#E1F5EE;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="#0F6E56" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p style="font-size:13px;color:var(--color-text-secondary);margin:0;line-height:1.5;">Leads de clientes que já viram seu trabalho e escolheram você</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-start;">
+        <div style="width:18px;height:18px;background:#E1F5EE;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="#0F6E56" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p style="font-size:13px;color:var(--color-text-secondary);margin:0;line-height:1.5;">Selo de verificado que você pode usar fora da plataforma também</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-start;">
+        <div style="width:18px;height:18px;background:#E1F5EE;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="#0F6E56" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p style="font-size:13px;color:var(--color-text-secondary);margin:0;line-height:1.5;">Painel com histórico de leads, avaliações e desempenho</p>
+      </div>
+    </div>
+    <button class="btn-primary" style="width:100%;padding:12px;font-size:14px;">Quero me cadastrar como prestador</button>
+    <p style="font-size:11px;color:var(--color-text-tertiary);margin:8px 0 0;text-align:center;">Taxa de verificação cobrada uma única vez. Assinatura mensal a partir de R$ 59.</p>
+  </div>
+
+  <div id="page-sobre" class="page">
+    <div id="nav-sobre"></div>
+    <p style="font-size:20px;font-weight:500;margin:1rem 0 6px;color:var(--color-text-primary);">O que torna um profissional confiável?</p>
+    <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 1.25rem;line-height:1.6;">A gente nasceu aqui no litoral paulista vendo gente boa contratar quem não presta — e quem presta ficar invisível. A ConfiaNow existe para virar esse jogo.</p>
+    <div style="padding:16px;background:#E1F5EE;border-radius:8px;margin-bottom:1.25rem;">
+      <p style="font-size:15px;font-weight:500;margin:0 0 8px;color:#085041;">Nosso padrão de verificação</p>
+      <div style="display:grid;gap:8px;">
+        <div style="display:flex;gap:8px;"><span style="font-size:13px;font-weight:500;color:#0F6E56;min-width:20px;">01</span><p style="font-size:13px;color:#0F6E56;margin:0;line-height:1.5;">CPF validado em base federal</p></div>
+        <div style="display:flex;gap:8px;"><span style="font-size:13px;font-weight:500;color:#0F6E56;min-width:20px;">02</span><p style="font-size:13px;color:#0F6E56;margin:0;line-height:1.5;">Documento com foto (RG ou CNH)</p></div>
+        <div style="display:flex;gap:8px;"><span style="font-size:13px;font-weight:500;color:#0F6E56;min-width:20px;">03</span><p style="font-size:13px;color:#0F6E56;margin:0;line-height:1.5;">Selfie com documento — biometria facial</p></div>
+        <div style="display:flex;gap:8px;"><span style="font-size:13px;font-weight:500;color:#0F6E56;min-width:20px;">04</span><p style="font-size:13px;color:#0F6E56;margin:0;line-height:1.5;">Checagem de antecedentes criminais</p></div>
+        <div style="display:flex;gap:8px;"><span style="font-size:13px;font-weight:500;color:#0F6E56;min-width:20px;">05</span><p style="font-size:13px;color:#0F6E56;margin:0;line-height:1.5;">Revisão manual por equipe ConfiaNow</p></div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="section-label">O que acontece se algo der errado</p>
+    <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin:0 0 8px;">Se você tiver um problema com um prestador verificado, abre uma denúncia com evidências. A nossa equipe analisa em até 7 dias úteis. Prestadores com denúncias procedentes perdem o selo — sem exceções.</p>
+    <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin:0;">Revalidação anual de todos os perfis ativos. Quem não mantém o padrão, sai.</p>
+  </div>
+
+</div>
+
+<script>
+let currentState = 'visitante';
+let currentPage = 'home';
+
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  currentPage = p;
+  renderDynamicParts();
+}
+
+function setNavTab(p) {
+  document.querySelectorAll('.nav-tab').forEach(el => {
+    if (el.getAttribute('onclick') && el.getAttribute('onclick').includes("'" + p + "'")) {
+      el.classList.add('active');
+    } else if (!el.id.startsWith('st-')) {
+      el.classList.remove('active');
+    }
+  });
+}
+
+function showState(s) {
+  currentState = s;
+  ['visitante','cliente','prestador'].forEach(id => {
+    const el = document.getElementById('st-' + id);
+    if (id === s) {
+      el.style.background = '#E1F5EE'; el.style.color = '#0F6E56'; el.style.borderColor = '#9FE1CB'; el.style.fontWeight = '500';
+    } else {
+      el.style.background = 'transparent'; el.style.color = 'var(--color-text-secondary)'; el.style.borderColor = 'transparent'; el.style.fontWeight = '400';
+    }
+  });
+  const bar = document.getElementById('state-bar');
+  const desc = document.getElementById('state-desc');
+  if (s === 'visitante') {
+    bar.style.background = '#FAEEDA'; bar.style.borderColor = '#FAC775';
+    desc.style.color = '#854F0B';
+    desc.textContent = 'Visitante — sem login. Navegação pública completa.';
+    bar.querySelector('svg').querySelectorAll('circle,path').forEach(el => { el.setAttribute('stroke','#854F0B'); });
+  } else if (s === 'cliente') {
+    bar.style.background = '#E6F1FB'; bar.style.borderColor = '#B5D4F4';
+    desc.style.color = '#185FA5';
+    desc.textContent = 'Ana Souza está logada como cliente — vê CTAs de contato e histórico.';
+    bar.querySelector('svg').querySelectorAll('circle,path').forEach(el => { el.setAttribute('stroke','#185FA5'); });
+  } else {
+    bar.style.background = '#E1F5EE'; bar.style.borderColor = '#9FE1CB';
+    desc.style.color = '#0F6E56';
+    desc.textContent = 'Carlos Ribeiro logado como prestador — vê painel e métricas do próprio perfil.';
+    bar.querySelector('svg').querySelectorAll('circle,path').forEach(el => { el.setAttribute('stroke','#0F6E56'); });
+  }
+  renderDynamicParts();
+}
+
+function navBar(active) {
+  const pages = [
+    {id:'home',label:'Home'},
+    {id:'busca',label:'Buscar'},
+    {id:'como',label:'Como funciona'},
+    {id:'seja',label:'Seja parceiro'},
+    {id:'sobre',label:'Sobre'}
+  ];
+  let right = '';
+  if (currentState === 'visitante') {
+    right = '<button class="btn-ghost" style="font-size:12px;padding:6px 12px;">Entrar</button><button class="btn-primary" style="font-size:12px;padding:6px 12px;">Cadastrar</button>';
+  } else if (currentState === 'cliente') {
+    right = '<div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="background:#E6F1FB;color:#185FA5;width:30px;height:30px;font-size:11px;">AS</div><span style="font-size:13px;font-weight:500;color:var(--color-text-primary);">Ana Souza</span><span class="tag" style="background:#E6F1FB;color:#185FA5;">Cliente</span></div>';
+  } else {
+    right = '<div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="background:#E1F5EE;color:#0F6E56;width:30px;height:30px;font-size:11px;">CR</div><span style="font-size:13px;font-weight:500;color:var(--color-text-primary);">Carlos Ribeiro</span><span class="tag" style="background:#E1F5EE;color:#0F6E56;">Prestador</span><button class="btn-ghost" style="font-size:11px;padding:4px 10px;" onclick="sendPrompt(\'Mostre o painel do prestador ConfiaNow ↗\')">Meu painel ↗</button></div>';
+  }
+  return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1rem;flex-wrap:wrap;gap:8px;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:15px;font-weight:500;color:#1D9E75;">Confia</span><span style="font-size:15px;font-weight:500;color:var(--color-text-primary);">Now</span><div style="width:16px;height:16px;background:#1D9E75;border-radius:50%;display:flex;align-items:center;justify-content:center;"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><polyline points="1.5,4.5 3.5,6.5 7.5,2.5" stroke="#fff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div style="display:flex;align-items:center;gap:4px;">' + right + '</div></div>';
+}
+
+function renderDynamicParts() {
+  const navIds = ['nav-home','nav-busca','nav-perfil','nav-como','nav-seja','nav-sobre'];
+  navIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = navBar(currentPage);
+  });
+
+  const isVisitor = currentState === 'visitante';
+  const isCliente = currentState === 'cliente';
+  const isPrestador = currentState === 'prestador';
+
+  const cardCta = isVisitor
+    ? '<button class="btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="alert(\'Crie sua conta grátis para entrar em contato!\')">Ver perfil</button>'
+    : isCliente
+    ? '<button class="btn-primary" style="font-size:12px;padding:5px 12px;">Enviar mensagem</button>'
+    : '<span style="font-size:11px;color:var(--color-text-tertiary);">Perfil público</span>';
+
+  ['cta-card-1','cta-card-2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = cardCta;
+  });
+
+  ['cta-busca-1','cta-busca-2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = isVisitor
+      ? '<button class="btn-ghost" style="font-size:11px;padding:4px 10px;">Ver perfil</button>'
+      : isCliente
+      ? '<button class="btn-primary" style="font-size:11px;padding:4px 10px;">Contatar</button>'
+      : '<span style="font-size:11px;color:var(--color-text-tertiary);">Perfil público</span>';
+  });
+
+  const loginBanner = document.getElementById('busca-cta-login');
+  if (loginBanner) loginBanner.style.display = isVisitor ? 'block' : 'none';
+
+  const perfilCta = document.getElementById('cta-perfil');
+  if (perfilCta) {
+    if (isVisitor) perfilCta.innerHTML = '<button class="btn-ghost" style="font-size:12px;padding:7px 14px;">Entrar para contatar</button>';
+    else if (isCliente) perfilCta.innerHTML = '<button class="btn-primary" style="font-size:12px;padding:7px 14px;">Enviar solicitação</button>';
+    else perfilCta.innerHTML = '<button class="btn-ghost" style="font-size:11px;padding:5px 10px;" onclick="sendPrompt(\'Mostre como editar o perfil do prestador ↗\')">Editar perfil ↗</button>';
+  }
+
+  const reviewCta = document.getElementById('perfil-review-cta');
+  if (reviewCta) {
+    if (isCliente) reviewCta.innerHTML = '<button class="btn-ghost" style="font-size:12px;padding:7px 14px;width:100%;">Deixar avaliação</button>';
+    else reviewCta.innerHTML = '';
+  }
+}
+
+renderDynamicParts();
+</script>

@@ -1,0 +1,43 @@
+{
+  "name": "@platform/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "tsx --test src/**/*.test.tsx",
+    "test:coverage": "c8 --reporter=text --reporter=lcov tsx --test src/**/*.test.tsx"
+  },
+  "dependencies": {
+    "@platform/analytics": "0.1.0",
+    "@platform/auth": "0.1.0",
+    "@platform/billing": "0.1.0",
+    "@platform/cms": "0.1.0",
+    "@platform/client-dashboard": "0.1.0",
+    "@platform/communication": "0.1.0",
+    "@platform/config": "0.1.0",
+    "@platform/database": "0.1.0",
+    "@platform/discovery": "0.1.0",
+    "@platform/evidence": "0.1.0",
+    "@platform/integrations": "0.1.0",
+    "@platform/leads": "0.1.0",
+    "@platform/moderation": "0.1.0",
+    "@platform/notifications": "0.1.0",
+    "@platform/profiles": "0.1.0",
+    "@platform/provider-dashboard": "0.1.0",
+    "@platform/reviews": "0.1.0",
+    "@platform/ui": "0.1.0",
+    "next": "^16.0.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.6.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "local-trust-platform",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace @platform/web",
+    "dev:api": "npm run dev --workspace @platform/api",
+    "build:web": "npm run build --workspace @platform/web",
+    "build:api": "npm run build --workspace @platform/api",
+    "lint:web": "npm run lint --workspace @platform/web",
+    "test:api": "npm run test --workspace @platform/api",
+    "test:web": "npm run test --workspace @platform/web",
+    "test:all": "npm run test:api && npm run test:web",
+    "test:e2e": "playwright test",
+    "test:coverage:api": "npm run test:coverage --workspace @platform/api",
+    "test:coverage:web": "npm run test:coverage --workspace @platform/web",
+    "test:coverage": "c8 --reporter=text --reporter=lcov --check-coverage --lines 90 --functions 90 --statements 90 --include packages/trust/src/scoring.ts --include packages/leads/src/rules.ts --include packages/reviews/src/rules.ts --include packages/communication/src/rules.ts --include packages/discovery/src/scoring.ts --include packages/profiles/src/slug.ts --include apps/web/src/app/dashboard/billing/billing-plan-selector.tsx --include apps/web/src/components/analytics/metrics-bar-chart.tsx --include apps/web/src/components/cms/cms-page-renderer.tsx --include apps/web/src/components/integrations/integration-status-cards.tsx npm run test:all",
+    "typecheck": "npm run build:api && npm run build:web",
+    "validate:release": "npm run typecheck && npm run test:coverage && npm run test:e2e",
+    "db:generate": "npm run prisma:generate --workspace @platform/database",
+    "db:migrate": "npm run prisma:migrate --workspace @platform/database",
+    "db:seed": "npm run prisma:seed --workspace @platform/database",
+    "db:reset": "npm run prisma:reset --workspace @platform/database"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.59.1",
+    "c8": "10.1.3"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

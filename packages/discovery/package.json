@@ -1,0 +1,14 @@
+{
+  "name": "@platform/discovery",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@prisma/client": "6.7.0",
+    "@platform/database": "0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

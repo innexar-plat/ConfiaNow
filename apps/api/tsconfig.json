@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "../..",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": false,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts", "../../packages/config/src/**/*.ts", "../../packages/auth/src/**/*.ts", "../../packages/database/src/**/*.ts"]
+}
+

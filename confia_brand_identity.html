@@ -1,0 +1,342 @@
+
+<style>
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes sealPop { 0%{transform:scale(0.6) rotate(-8deg);opacity:0} 60%{transform:scale(1.08) rotate(2deg);opacity:1} 100%{transform:scale(1) rotate(0deg);opacity:1} }
+  @keyframes shimmer { 0%{opacity:0.3} 50%{opacity:1} 100%{opacity:0.3} }
+  @keyframes slideIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
+  @keyframes checkDraw { from{stroke-dashoffset:40} to{stroke-dashoffset:0} }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(29,158,117,0.3)} 50%{box-shadow:0 0 0 8px rgba(29,158,117,0)} }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  @keyframes tagIn { from{opacity:0;transform:scale(0.8)} to{opacity:1;transform:scale(1)} }
+
+  * { box-sizing: border-box; }
+  .section { animation: fadeUp 0.5s ease both; }
+  .s1{animation-delay:.05s}.s2{animation-delay:.12s}.s3{animation-delay:.2s}.s4{animation-delay:.28s}.s5{animation-delay:.36s}.s6{animation-delay:.44s}
+
+  .swatch { width:52px; height:52px; border-radius:10px; display:inline-block; }
+  .label-sm { font-size:11px; color:var(--color-text-secondary); margin-top:4px; text-align:center; }
+
+  .card { background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1rem 1.25rem; }
+  .tag { display:inline-block; font-size:11px; font-weight:500; padding:4px 10px; border-radius:20px; }
+
+  .seal { animation: sealPop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.4s both; }
+  .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor:pointer; }
+  .card-hover:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.08); }
+
+  .anim-demo { background:var(--color-background-secondary); border-radius:var(--border-radius-lg); padding:1rem; position:relative; overflow:hidden; }
+  .progress-bar { height:4px; border-radius:2px; background:#1D9E75; width:0%; transition:width 1.4s cubic-bezier(0.4,0,0.2,1); }
+  .toast { background:#1D9E75; color:#fff; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:500; display:flex; align-items:center; gap:8px; transform:translateY(20px); opacity:0; transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+  .toast.show { transform:translateY(0); opacity:1; }
+  .skeleton { background:linear-gradient(90deg,var(--color-background-secondary) 25%, var(--color-background-tertiary) 50%, var(--color-background-secondary) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:6px; }
+
+  .check-circle { width:40px; height:40px; border-radius:50%; background:#E1F5EE; display:flex; align-items:center; justify-content:center; animation:pulse 2s infinite; flex-shrink:0; }
+  .verified-badge { animation:float 3s ease-in-out infinite; }
+
+  .transition-row { display:flex; gap:8px; flex-wrap:wrap; }
+  .t-btn { font-size:12px; padding:6px 12px; border-radius:20px; border:0.5px solid var(--color-border-secondary); background:var(--color-background-primary); color:var(--color-text-primary); cursor:pointer; transition:all 0.2s ease; }
+  .t-btn:hover { background:#1D9E75; color:#fff; border-color:#1D9E75; transform:scale(1.04); }
+  .t-btn:active { transform:scale(0.97); }
+
+  .typing::after { content:'|'; animation:shimmer 0.8s infinite; }
+  .divider { border:none; border-top:0.5px solid var(--color-border-tertiary); margin:1.25rem 0; }
+
+  .flow-step { display:flex; align-items:center; gap:10px; padding:10px 0; animation:slideIn 0.4s ease both; }
+  .step-dot { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:500; flex-shrink:0; }
+
+  .tag-anim { animation: tagIn 0.3s ease both; }
+</style>
+
+<h2 class="sr-only">Proposta de identidade visual para a plataforma ConfiaNow — cores, tipografia, animações e efeitos para a página pública</h2>
+
+<div style="padding:1.5rem 0 0;">
+
+  <!-- NOME E CONCEITO -->
+  <div class="section s1" style="margin-bottom:2rem;">
+    <p style="font-size:12px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">Proposta de identidade visual</p>
+    <p style="font-size:28px;font-weight:500;margin:0 0 4px;color:var(--color-text-primary);">ConfiaNow <span style="color:#1D9E75;">✓</span></p>
+    <p style="font-size:14px;color:var(--color-text-secondary);margin:0;">Plataforma de serviços locais verificados · Litoral de São Paulo</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PALETA DE CORES -->
+  <div class="section s2" style="margin-bottom:2rem;">
+    <p style="font-size:12px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 1rem;">Paleta principal</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;">
+      <div style="text-align:center;">
+        <div class="swatch" style="background:#1D9E75;"></div>
+        <p class="label-sm">Verde confiança<br><span style="color:var(--color-text-tertiary);">#1D9E75</span></p>
+        <span class="tag" style="background:#E1F5EE;color:#0F6E56;margin-top:4px;">Primária</span>
+      </div>
+      <div style="text-align:center;">
+        <div class="swatch" style="background:#085041;"></div>
+        <p class="label-sm">Verde profundo<br><span style="color:var(--color-text-tertiary);">#085041</span></p>
+        <span class="tag" style="background:#E1F5EE;color:#0F6E56;margin-top:4px;">Âncora</span>
+      </div>
+      <div style="text-align:center;">
+        <div class="swatch" style="background:#1A2B3C;"></div>
+        <p class="label-sm">Azul meia-noite<br><span style="color:var(--color-text-tertiary);">#1A2B3C</span></p>
+        <span class="tag" style="background:#E6F1FB;color:#185FA5;margin-top:4px;">Texto / marca</span>
+      </div>
+      <div style="text-align:center;">
+        <div class="swatch" style="background:#F5F7F4;border:0.5px solid var(--color-border-tertiary);"></div>
+        <p class="label-sm">Fundo neutro<br><span style="color:var(--color-text-tertiary);">#F5F7F4</span></p>
+        <span class="tag" style="background:var(--color-background-secondary);color:var(--color-text-secondary);margin-top:4px;">Background</span>
+      </div>
+      <div style="text-align:center;">
+        <div class="swatch" style="background:#FAC775;"></div>
+        <p class="label-sm">Âmbar destaque<br><span style="color:var(--color-text-tertiary);">#FAC775</span></p>
+        <span class="tag" style="background:#FAEEDA;color:#854F0B;margin-top:4px;">CTA / selo</span>
+      </div>
+      <div style="text-align:center;">
+        <div class="swatch" style="background:#E24B4A;"></div>
+        <p class="label-sm">Vermelho alerta<br><span style="color:var(--color-text-tertiary);">#E24B4A</span></p>
+        <span class="tag" style="background:#FCEBEB;color:#A32D2D;margin-top:4px;">Risco / erro</span>
+      </div>
+    </div>
+    <div style="margin-top:1rem;padding:12px 14px;background:#E1F5EE;border-radius:8px;border-left:3px solid #1D9E75;">
+      <p style="font-size:13px;color:#0F6E56;margin:0;font-weight:500;">Racional: Verde transmite segurança, saúde e natureza — oposto do vermelho de golpe/perigo. Âmbar no CTA e no selo diferencia ação sem competir com o verde.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- TIPOGRAFIA -->
+  <div class="section s3" style="margin-bottom:2rem;">
+    <p style="font-size:12px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 1rem;">Tipografia</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="card">
+        <p style="font-size:11px;color:var(--color-text-secondary);margin:0 0 8px;">Display / Hero</p>
+        <p style="font-size:26px;font-weight:500;margin:0;color:var(--color-text-primary);line-height:1.2;">Prestadores<br>verificados perto<br>de você.</p>
+        <p style="font-size:11px;color:var(--color-text-tertiary);margin:8px 0 0;">Inter ou Plus Jakarta Sans · 500 · tight</p>
+      </div>
+      <div class="card">
+        <p style="font-size:11px;color:var(--color-text-secondary);margin:0 0 8px;">Corpo / confiança</p>
+        <p style="font-size:14px;color:var(--color-text-secondary);margin:0;line-height:1.7;">Cada profissional passa por verificação de documentos, biometria facial e checagem de antecedentes antes de aparecer aqui.</p>
+        <p style="font-size:11px;color:var(--color-text-tertiary);margin:8px 0 0;">Inter · 400 · 1.7 line-height</p>
+      </div>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+      <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Claro · 14px · 400</span>
+      <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Destaque · 16px · 500</span>
+      <span class="tag" style="background:#E1F5EE;color:#0F6E56;">Hero · 36–48px · 500</span>
+      <span class="tag" style="background:#FAEEDA;color:#854F0B;">Sem serifas. Sem itálico.</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SELO DE VERIFICAÇÃO -->
+  <div class="section s4" style="margin-bottom:2rem;">
+    <p style="font-size:12px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 1rem;">Selo de verificação</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div class="card" style="flex:1;min-width:200px;">
+        <p style="font-size:11px;color:var(--color-text-secondary);margin:0 0 12px;">Animação de entrada — pop + bounce</p>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="seal verified-badge" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#1D9E75,#085041);display:flex;align-items:center;justify-content:center;">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <polyline points="7,14 12,19 21,10" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="40" stroke-dashoffset="0" style="animation:checkDraw 0.5s ease 0.8s both;"/>
+            </svg>
+          </div>
+          <div>
+            <p style="font-size:14px;font-weight:500;margin:0;color:var(--color-text-primary);">Verificado ConfiaNow</p>
+            <p style="font-size:12px;color:#1D9E75;margin:2px 0 0;">Documentos · Biometria · Antecedentes</p>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="tag tag-anim" style="background:#E1F5EE;color:#0F6E56;animation-delay:0.9s;">CPF validado</span>
+          <span class="tag tag-anim" style="background:#E1F5EE;color:#0F6E56;animation-delay:1.0s;">RG / CNH</span>
+          <span class="tag tag-anim" style="background:#E1F5EE;color:#0F6E56;animation-delay:1.1s;">Biometria facial</span>
+          <span class="tag tag-anim" style="background:#E1F5EE;color:#0F6E56;animation-delay:1.2s;">Antecedentes</span>
+        </div>
+      </div>
+
+      <div class="card" style="flex:1;min-width:200px;">
+        <p style="font-size:11px;color:var(--color-text-secondary);margin:0 0 12px;">Fluxo de verificação — micro-steps</p>
+        <div class="flow-step" style="animation-delay:0.3s;">
+          <div class="step-dot" style="background:#E1F5EE;color:#0F6E56;">1</div>
+          <p style="font-size:13px;margin:0;color:var(--color-text-primary);">Envia documentos</p>
+          <div style="margin-left:auto;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="flow-step" style="animation-delay:0.45s;">
+          <div class="step-dot" style="background:#E1F5EE;color:#0F6E56;">2</div>
+          <p style="font-size:13px;margin:0;color:var(--color-text-primary);">Biometria facial</p>
+          <div style="margin-left:auto;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="flow-step" style="animation-delay:0.6s;">
+          <div class="step-dot" style="background:#E1F5EE;color:#0F6E56;">3</div>
+          <p style="font-size:13px;margin:0;color:var(--color-text-primary);">Análise de antecedentes</p>
+          <div style="margin-left:auto;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="flow-step" style="animation-delay:0.75s;">
+          <div class="step-dot check-circle" style="background:#1D9E75;color:#fff;">✓</div>
+          <p style="font-size:13px;margin:0;font-weight:500;color:#1D9E75;">Aprovado · Selo ativado</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ANIMAÇÕES E TRANSIÇÕES -->
+  <div class="section s5" style="margin-bottom:2rem;">
+    <p style="font-size:12px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 1rem;">Animações e efeitos interativos</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+
+      <div class="card">
+        <p style="font-size:11px;color:var(--color-text-secondary);margin:0 0 10px;">Botão CTA — spring + ripple</p>
+        <button id="cta-btn" onclick="rippleEffect(this)" style="width:100%;padding:11px;background:#1D9E75;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;position:relative;overflow:hidden;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='#0F6E56';this.style.transform='scale(1.03)'" onmouseout="this.style.background='#1D9E75';this.style.transform='scale(1)'">
+          Encontrar prestador verificado
+        </button>
+        <p style="font-size:11px;color:var(--color-text-tertiary);margin:8px 0 0;">Hover: scale(1.03) + cor escurece · Active: scale(0.97)</p>
+      </div>
+
+      <div class="card">
+        <p style="font-size:11px;color:var(--color-text-secondary);margin:0 0 10px;">Toast de sucesso — slide up + bounce</p>
+        <button onclick="showToast()" style="width:100%;padding:8px;border:0.5px solid var(--color-border-secondary);border-radius:8px;background:var(--color-background-secondary);font-size:13px;cursor:pointer;color:var(--color-text-primary);">▶ Simular verificação aprovada</button>
+        <div id="toast-area" style="margin-top:10px;min-height:44px;">
+          <div id="toast" class="toast">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#fff" stroke-width="1.5"/><polyline points="5,8 7,10 11,6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Prestador verificado com sucesso!
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <p style="font-size:11px;color:var(--color-text-secondary);margin:0 0 10px;">Skeleton loader — shimmer horizontal</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <div class="skeleton" style="width:40px;height:40px;border-radius:50%;flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <div class="skeleton" style="height:12px;width:60%;margin-bottom:6px;"></div>
+            <div class="skeleton" style="height:10px;width:40%;"></div>
+          </div>
+        </div>
+        <div class="skeleton" style="height:10px;width:90%;margin-bottom:5px;"></div>
+        <div class="skeleton" style="height:10px;width:70%;"></div>
+        <p style="font-size:11px;color:var(--color-text-tertiary);margin:8px 0 0;">Antes do card do prestador carregar</p>
+      </div>
+
+      <div class="card">
+        <p style="font-size:11px;color:var(--color-text-secondary);margin:0 0 10px;">Barra de progresso — easing suave</p>
+        <div style="margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--color-text-secondary);margin-bottom:6px;">
+            <span>Verificação em andamento</span><span id="pct">0%</span>
+          </div>
+          <div style="height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;">
+            <div id="prog" class="progress-bar"></div>
+          </div>
+        </div>
+        <button onclick="runProgress()" style="font-size:12px;padding:6px 12px;border-radius:6px;border:0.5px solid var(--color-border-secondary);background:transparent;cursor:pointer;color:var(--color-text-primary);">▶ Iniciar</button>
+        <p style="font-size:11px;color:var(--color-text-tertiary);margin:8px 0 0;">cubic-bezier(0.4,0,0.2,1) · não linear</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CARD DE PRESTADOR -->
+  <div class="section s6" style="margin-bottom:2rem;">
+    <p style="font-size:12px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 1rem;">Card de prestador — hover com lift</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="card card-hover">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:44px;height:44px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:15px;color:#0F6E56;flex-shrink:0;">CR</div>
+          <div>
+            <p style="font-size:14px;font-weight:500;margin:0;color:var(--color-text-primary);">Carlos Ribeiro</p>
+            <p style="font-size:12px;color:var(--color-text-secondary);margin:2px 0 0;">Eletricista · Praia Grande</p>
+          </div>
+          <div style="margin-left:auto;">
+            <div style="width:20px;height:20px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center;">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><polyline points="2,5.5 4.5,8 9,3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+          <span class="tag" style="background:#E1F5EE;color:#0F6E56;font-size:11px;">Verificado</span>
+          <span class="tag" style="background:#FAEEDA;color:#854F0B;font-size:11px;">Destaque</span>
+          <span class="tag" style="background:var(--color-background-secondary);color:var(--color-text-secondary);font-size:11px;">⭐ 4.9 (38 avaliações)</span>
+        </div>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin:0 0 10px;">Instalações, manutenção e laudos técnicos. Atende toda a Baixada Santista.</p>
+        <button style="width:100%;padding:8px;background:#1D9E75;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;">Entrar em contato</button>
+      </div>
+
+      <div class="card card-hover">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:44px;height:44px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:15px;color:#185FA5;flex-shrink:0;">MS</div>
+          <div>
+            <p style="font-size:14px;font-weight:500;margin:0;color:var(--color-text-primary);">Maria Santos</p>
+            <p style="font-size:12px;color:var(--color-text-secondary);margin:2px 0 0;">Diarista · Santos</p>
+          </div>
+          <div style="margin-left:auto;">
+            <div style="width:20px;height:20px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center;">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><polyline points="2,5.5 4.5,8 9,3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+          <span class="tag" style="background:#E1F5EE;color:#0F6E56;font-size:11px;">Verificada</span>
+          <span class="tag" style="background:var(--color-background-secondary);color:var(--color-text-secondary);font-size:11px;">⭐ 4.7 (21 avaliações)</span>
+        </div>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin:0 0 10px;">Limpeza residencial e comercial. Produtos inclusos. Disponível fins de semana.</p>
+        <button style="width:100%;padding:8px;background:#1D9E75;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;">Entrar em contato</button>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--color-text-tertiary);margin:8px 0 0;">Hover: translateY(-3px) + box-shadow suave · Transição 200ms ease</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- DIRETRIZES RÁPIDAS -->
+  <div class="section" style="animation:fadeUp 0.5s ease 0.5s both;">
+    <p style="font-size:12px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin:0 0 1rem;">Princípios de movimento</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div style="padding:12px;background:var(--color-background-secondary);border-radius:8px;">
+        <p style="font-size:13px;font-weight:500;margin:0 0 4px;color:var(--color-text-primary);">Entradas</p>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin:0;">fadeUp 400ms · stagger 60ms entre elementos · ease-out</p>
+      </div>
+      <div style="padding:12px;background:var(--color-background-secondary);border-radius:8px;">
+        <p style="font-size:13px;font-weight:500;margin:0 0 4px;color:var(--color-text-primary);">Interações</p>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Spring cubic-bezier(0.34,1.56,0.64,1) · scale em botões · lift em cards</p>
+      </div>
+      <div style="padding:12px;background:var(--color-background-secondary);border-radius:8px;">
+        <p style="font-size:13px;font-weight:500;margin:0 0 4px;color:var(--color-text-primary);">Feedbacks</p>
+        <p style="font-size:12px;color:var(--color-text-secondary);margin:0;">Toast slide-up · pulse no selo · shimmer em loading</p>
+      </div>
+    </div>
+    <div style="margin-top:10px;padding:12px 14px;background:#E6F1FB;border-radius:8px;border-left:3px solid #378ADD;">
+      <p style="font-size:13px;color:#185FA5;margin:0;font-weight:500;">Regra de ouro: cada animação deve reforçar confiança — nunca distrair. Nada de parallax excessivo, efeitos de glitch ou flashes. Movimento deve ser intencional e breve.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function rippleEffect(btn) {
+  btn.style.transform = 'scale(0.97)';
+  setTimeout(() => { btn.style.transform = 'scale(1)'; }, 150);
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => { t.classList.remove('show'); }, 3000);
+}
+
+function runProgress() {
+  const bar = document.getElementById('prog');
+  const pct = document.getElementById('pct');
+  bar.style.width = '0%'; pct.textContent = '0%';
+  let v = 0;
+  const steps = [15, 35, 60, 80, 92, 100];
+  let i = 0;
+  const tick = () => {
+    if (i >= steps.length) return;
+    v = steps[i++];
+    bar.style.width = v + '%';
+    pct.textContent = v + '%';
+    if (v < 100) setTimeout(tick, 600);
+  };
+  setTimeout(tick, 100);
+}
+</script>

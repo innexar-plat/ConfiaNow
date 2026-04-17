@@ -1,0 +1,1520 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CLIENT
+  BUSINESS
+  ADMIN
+}
+
+enum VerificationStatus {
+  PENDING_CONTACT_VERIFICATION
+  PENDING_DOCUMENT_SUBMISSION
+  PENDING_REVIEW
+  MORE_INFO_REQUIRED
+  APPROVED
+  REJECTED
+}
+
+enum OtpChannel {
+  EMAIL
+  PHONE
+}
+
+enum LeadStatus {
+  OPEN
+  VIEWED
+  RESPONDED
+  CONTACT_RELEASED
+  CLOSED
+}
+
+enum LeadMessageSenderRole {
+  CLIENT
+  BUSINESS
+}
+
+enum BadgeLevelCode {
+  NONE
+  BRONZE
+  SILVER
+  GOLD
+}
+
+enum BadgeEventType {
+  RECALCULATED
+  PROMOTED
+  DEMOTED
+  SUSPENDED
+  RESTORED
+}
+
+enum ReviewStatus {
+  PENDING
+  MORE_INFO_REQUIRED
+  APPROVED
+  REJECTED
+}
+
+enum ConversationParticipantRole {
+  CLIENT
+  BUSINESS
+  ADMIN
+}
+
+enum StoredFilePurpose {
+  VERIFICATION_DOCUMENT
+  REVIEW_EVIDENCE
+  MODERATION_EVIDENCE
+  CHAT_ATTACHMENT
+  GENERAL
+}
+
+enum StorageEventType {
+  UPLOADED
+  VERSION_ADDED
+  LINKED
+  UNLINKED
+  DELETED
+  RESTORED
+}
+
+enum EvidenceTargetType {
+  VERIFICATION_REQUEST
+  REVIEW
+  REVIEW_MODERATION
+  CONVERSATION_MESSAGE
+}
+
+enum ModerationCaseStatus {
+  OPEN
+  UNDER_REVIEW
+  RESOLVED
+  DISMISSED
+}
+
+enum ModerationCaseType {
+  REPORT_BUSINESS
+  REPORT_REVIEW
+  REPORT_USER
+  FRAUD_SUSPECTED
+  SPAM
+  OTHER
+}
+
+enum ProviderSubscriptionStatus {
+  NOT_ENABLED
+  TRIAL
+  ACTIVE
+  PAST_DUE
+  CANCELED
+}
+
+enum ProviderRecommendationPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum NotificationType {
+  LEAD_CREATED
+  LEAD_UPDATED
+  REVIEW_PENDING
+  REVIEW_APPROVED
+  SYSTEM_ALERT
+  CAMPAIGN_ANNOUNCEMENT
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  PUSH
+}
+
+enum NotificationDeliveryStatus {
+  PENDING
+  SENT
+  FAILED
+  SKIPPED
+}
+
+enum CampaignRunStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum SubscriptionPlanCode {
+  FREE
+  PRO_MONTHLY
+  PRO_YEARLY
+}
+
+enum BillingInterval {
+  MONTH
+  YEAR
+  ONE_TIME
+}
+
+enum SubscriptionStatus {
+  INCOMPLETE
+  ACTIVE
+  PAST_DUE
+  CANCELED
+}
+
+enum InvoiceType {
+  SUBSCRIPTION
+  VERIFICATION_FEE
+  BOOST
+}
+
+enum InvoiceStatus {
+  OPEN
+  PAID
+  FAILED
+  VOID
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentProvider {
+  LOCAL
+}
+
+enum PaymentMethod {
+  CHECKOUT
+  WEBHOOK
+  MANUAL
+}
+
+enum BoostStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  CANCELED
+}
+
+enum BillingEventType {
+  CHECKOUT_CREATED
+  SUBSCRIPTION_UPDATED
+  SUBSCRIPTION_CANCELED
+  WEBHOOK_RECEIVED
+  PAYMENT_SUCCEEDED
+  PAYMENT_FAILED
+  BOOST_CREATED
+  BOOST_ACTIVATED
+  BOOST_EXPIRED
+}
+
+enum AnalyticsEventType {
+  PROFILE_VIEW
+  CONTACT_CLICK
+  LEAD_CREATED
+  REVIEW_SUBMITTED
+  SUBSCRIPTION_ACTIVATED
+  BOOST_ACTIVATED
+}
+
+enum DailyMetricScope {
+  PLATFORM
+  BUSINESS
+}
+
+enum IntegrationProvider {
+  VERIFICATION_PROVIDER
+  EMAIL_PROVIDER
+  STORAGE_PROVIDER
+}
+
+enum IntegrationEventStatus {
+  RECEIVED
+  PROCESSING
+  PROCESSED
+  FAILED
+  DEAD_LETTER
+}
+
+enum BackgroundJobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELED
+}
+
+enum RetrySourceType {
+  WEBHOOK_DELIVERY
+  BACKGROUND_JOB
+}
+
+enum RetryQueueStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELED
+}
+
+model User {
+  id                        String               @id @default(uuid()) @db.Uuid
+  role                      UserRole
+  fullName                  String
+  displayName               String
+  email                     String               @unique
+  phone                     String               @unique
+  passwordHash              String
+  cpf                       String?              @unique
+  cnpj                      String?              @unique
+  birthDate                 DateTime?
+  businessName              String?
+  legalRepresentativeName   String?
+  legalRepresentativeCpf    String?
+  emailVerifiedAt           DateTime?
+  phoneVerifiedAt           DateTime?
+  verificationStatus        VerificationStatus   @default(PENDING_CONTACT_VERIFICATION)
+  createdAt                 DateTime             @default(now())
+  updatedAt                 DateTime             @updatedAt
+  deletedAt                 DateTime?
+  sessions                  Session[]
+  otpCodes                  OtpCode[]
+  verificationRequest       VerificationRequest?
+  businessOwner             BusinessOwner?
+  businessProfile           BusinessProfile?
+  createdLeads              Lead[]               @relation("LeadClient")
+  leadMessages              LeadMessage[]
+  leadStatusUpdates         LeadStatusHistory[]  @relation("LeadStatusActor")
+  leadContactReleases       LeadContactRelease[] @relation("LeadContactActor")
+  conversationParticipants  ConversationParticipant[]
+  conversationMessages      ConversationMessage[]
+  badgeEvents               BadgeEvent[]         @relation("BadgeEventActor")
+  badgePenalties            BadgePenalty[]       @relation("BadgePenaltyActor")
+  authoredReviews           Review[]             @relation("ReviewAuthor")
+  assignedReviewModerations ReviewModeration[]   @relation("ReviewAssignedAdmin")
+  reviewedReviewModerations ReviewModeration[]   @relation("ReviewReviewedBy")
+  ownedFiles                StoredFile[]         @relation("StoredFileOwner")
+  uploadedFileVersions      DocumentVersion[]    @relation("DocumentVersionUploader")
+  storageEvents             StorageEvent[]       @relation("StorageEventActor")
+  evidenceLinks             EvidenceLink[]       @relation("EvidenceLinkActor")
+  auditLogs                 AuditLog[]           @relation("AuditActor")
+  reportedCases             ModerationCase[]     @relation("ModerationCaseReporter")
+  moderationDecisions       ModerationDecision[] @relation("ModerationDecisionAdmin")
+  clientFavorites           ClientFavorite[]
+  clientDashboardViews      ClientDashboardView[]
+  notifications             Notification[]
+  notificationPreference    NotificationPreference?
+  triggeredCampaignRuns     CampaignRun[]         @relation("CampaignRunTriggeredBy")
+  subscriptions             Subscription[]
+  invoices                  Invoice[]
+  payments                  Payment[]
+  boosts                    Boost[]
+  billingEvents             BillingEvent[]
+  analyticsEvents           AnalyticsEvent[]      @relation("AnalyticsActor")
+  authoredPages             Page[]                @relation("PageAuthor")
+  campaignAttributions      CampaignAttribution[] @relation("CampaignAttributionUser")
+  integrationEvents         IntegrationEvent[]    @relation("IntegrationEventActor")
+  retriedBackgroundJobs     BackgroundJob[]       @relation("BackgroundJobRetriedBy")
+  retryQueueEntries         RetryQueue[]          @relation("RetryQueueActor")
+
+  @@map("users")
+}
+
+model BusinessProfile {
+  id               String             @id @default(uuid()) @db.Uuid
+  userId           String             @unique @db.Uuid
+  slug             String             @unique
+  businessName     String
+  headline         String?
+  description      String?
+  publicEmail      String?
+  publicPhone      String?
+  whatsapp         String?
+  websiteUrl       String?
+  city             String?
+  state            String?
+  serviceArea      String?
+  yearsInBusiness  Int?
+  isPublished      Boolean            @default(false)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  services         BusinessService[]
+  portfolioItems   PortfolioItem[]
+  categories       BusinessCategory[]
+  searchIndexEntry BusinessSearchIndex?
+  receivedLeads    Lead[]
+  reviews          Review[]
+  trustScore       TrustScore?
+  badgeEvents      BadgeEvent[]
+  badgePenalties   BadgePenalty[]
+  dashboardSnapshots ProviderDashboardSnapshot[]
+  providerRecommendations ProviderRecommendation[]
+  favoritedByClients ClientFavorite[]
+  subscription      Subscription?
+  invoices          Invoice[]
+  payments          Payment[]
+  boosts            Boost[]
+  billingEvents     BillingEvent[]
+  analyticsEvents   AnalyticsEvent[]
+  dailyMetrics      DailyMetric[]
+  businessReports   BusinessReport[]
+
+  @@index([slug])
+  @@map("business_profiles")
+}
+
+model AnalyticsEvent {
+  id                String             @id @default(uuid()) @db.Uuid
+  type              AnalyticsEventType
+  actorUserId       String?            @db.Uuid
+  businessProfileId String?            @db.Uuid
+  categorySlug      String?
+  citySlug          String?
+  metadata          Json?
+  occurredAt        DateTime           @default(now())
+  createdAt         DateTime           @default(now())
+  actor             User?              @relation("AnalyticsActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  businessProfile   BusinessProfile?   @relation(fields: [businessProfileId], references: [id], onDelete: SetNull)
+
+  @@index([type, occurredAt])
+  @@index([businessProfileId, type, occurredAt])
+  @@index([categorySlug, citySlug, occurredAt])
+  @@map("analytics_events")
+}
+
+model DailyMetric {
+  id                String            @id @default(uuid()) @db.Uuid
+  metricDate        DateTime
+  scope             DailyMetricScope
+  scopeKey          String
+  metricKey         String
+  metricValue       Float             @default(0)
+  businessProfileId String?           @db.Uuid
+  metadata          Json?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  businessProfile   BusinessProfile?  @relation(fields: [businessProfileId], references: [id], onDelete: SetNull)
+
+  @@unique([metricDate, scope, scopeKey, metricKey])
+  @@index([scope, metricDate])
+  @@index([businessProfileId, metricDate])
+  @@map("daily_metrics")
+}
+
+model BusinessReport {
+  id                        String          @id @default(uuid()) @db.Uuid
+  businessProfileId         String          @db.Uuid
+  periodStart               DateTime
+  periodEnd                 DateTime
+  profileViewsCount         Int             @default(0)
+  contactClicksCount        Int             @default(0)
+  leadsReceivedCount        Int             @default(0)
+  respondedLeadsCount       Int             @default(0)
+  responseRate              Float?
+  averageResponseHours      Float?
+  trustScoreLatest          Int             @default(0)
+  trustScoreAverage         Float?
+  approvedReviewsCount      Int             @default(0)
+  averageRating             Float?
+  platformAverageRating     Float?
+  platformAverageResponseRate Float?
+  activeBoostCount          Int             @default(0)
+  demandHighlights          String[]
+  createdAt                 DateTime        @default(now())
+  updatedAt                 DateTime        @updatedAt
+  businessProfile           BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([businessProfileId, periodStart, periodEnd])
+  @@index([businessProfileId, periodEnd])
+  @@map("business_reports")
+}
+
+model Subscription {
+  id                  String               @id @default(uuid()) @db.Uuid
+  userId              String               @db.Uuid
+  businessProfileId   String               @unique @db.Uuid
+  planCode            SubscriptionPlanCode @default(FREE)
+  interval            BillingInterval      @default(MONTH)
+  status              SubscriptionStatus   @default(INCOMPLETE)
+  provider            PaymentProvider      @default(LOCAL)
+  providerCustomerId  String?
+  providerSubscriptionId String?
+  checkoutReference   String?
+  startedAt           DateTime?
+  currentPeriodStart  DateTime?
+  currentPeriodEnd    DateTime?
+  cancelAtPeriodEnd   Boolean              @default(false)
+  canceledAt          DateTime?
+  delinquentAt        DateTime?
+  metadata            Json?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessProfile     BusinessProfile      @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  invoices            Invoice[]
+  payments            Payment[]
+  billingEvents       BillingEvent[]
+
+  @@index([userId, status])
+  @@index([providerSubscriptionId])
+  @@map("subscriptions")
+}
+
+model Invoice {
+  id                String          @id @default(uuid()) @db.Uuid
+  userId            String          @db.Uuid
+  businessProfileId String          @db.Uuid
+  subscriptionId    String?         @db.Uuid
+  boostId           String?         @db.Uuid
+  type              InvoiceType
+  status            InvoiceStatus   @default(OPEN)
+  amountCents       Int
+  currency          String          @default("USD")
+  description       String
+  provider          PaymentProvider @default(LOCAL)
+  providerInvoiceId String?
+  dueAt             DateTime?
+  paidAt            DateTime?
+  failedAt          DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessProfile   BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  subscription      Subscription?   @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  boost             Boost?          @relation(fields: [boostId], references: [id], onDelete: SetNull)
+  payments          Payment[]
+  billingEvents     BillingEvent[]
+
+  @@unique([boostId])
+  @@index([userId, createdAt])
+  @@index([businessProfileId, status, createdAt])
+  @@index([subscriptionId])
+  @@map("invoices")
+}
+
+model Payment {
+  id                String          @id @default(uuid()) @db.Uuid
+  userId            String          @db.Uuid
+  businessProfileId String          @db.Uuid
+  subscriptionId    String?         @db.Uuid
+  invoiceId         String          @db.Uuid
+  boostId           String?         @db.Uuid
+  provider          PaymentProvider @default(LOCAL)
+  providerPaymentId String?
+  providerReference String?
+  method            PaymentMethod   @default(CHECKOUT)
+  status            PaymentStatus   @default(PENDING)
+  amountCents       Int
+  currency          String          @default("USD")
+  paidAt            DateTime?
+  failedAt          DateTime?
+  metadata          Json?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessProfile   BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  subscription      Subscription?   @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  invoice           Invoice         @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  boost             Boost?          @relation(fields: [boostId], references: [id], onDelete: SetNull)
+  billingEvents     BillingEvent[]
+
+  @@index([userId, createdAt])
+  @@index([invoiceId, status])
+  @@index([subscriptionId])
+  @@index([boostId])
+  @@map("payments")
+}
+
+model Boost {
+  id                String          @id @default(uuid()) @db.Uuid
+  userId            String          @db.Uuid
+  businessProfileId String          @db.Uuid
+  providerReference String?
+  status            BoostStatus     @default(PENDING)
+  amountCents       Int
+  currency          String          @default("USD")
+  startsAt          DateTime?
+  endsAt            DateTime?
+  activatedAt       DateTime?
+  canceledAt        DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessProfile   BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  invoice           Invoice?
+  payments          Payment[]
+  billingEvents     BillingEvent[]
+
+  @@index([businessProfileId, status, endsAt])
+  @@index([userId, createdAt])
+  @@map("boosts")
+}
+
+model BillingEvent {
+  id                String           @id @default(uuid()) @db.Uuid
+  userId            String?          @db.Uuid
+  businessProfileId String?          @db.Uuid
+  subscriptionId    String?          @db.Uuid
+  invoiceId         String?          @db.Uuid
+  paymentId         String?          @db.Uuid
+  boostId           String?          @db.Uuid
+  type              BillingEventType
+  provider          PaymentProvider  @default(LOCAL)
+  providerEventId   String?          @unique
+  providerReference String?
+  payload           Json?
+  processedAt       DateTime?
+  createdAt         DateTime         @default(now())
+  user              User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  businessProfile   BusinessProfile? @relation(fields: [businessProfileId], references: [id], onDelete: SetNull)
+  subscription      Subscription?    @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  invoice           Invoice?         @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  payment           Payment?         @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  boost             Boost?           @relation(fields: [boostId], references: [id], onDelete: SetNull)
+
+  @@index([businessProfileId, createdAt])
+  @@index([subscriptionId, createdAt])
+  @@index([invoiceId, createdAt])
+  @@map("billing_events")
+}
+
+model IntegrationEvent {
+  id              String                 @id @default(uuid()) @db.Uuid
+  provider        IntegrationProvider
+  eventType       String
+  providerEventId String?                @unique
+  status          IntegrationEventStatus @default(RECEIVED)
+  payload         Json?
+  signature       String?
+  sourceIp        String?
+  actorUserId     String?                @db.Uuid
+  receivedAt      DateTime               @default(now())
+  processedAt     DateTime?
+  failedAt        DateTime?
+  errorMessage    String?
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  actor           User?                  @relation("IntegrationEventActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  deliveries      WebhookDelivery[]
+  jobs            BackgroundJob[]
+  retryQueue      RetryQueue[]
+
+  @@index([provider, status, receivedAt])
+  @@index([eventType, receivedAt])
+  @@map("integration_events")
+}
+
+model WebhookDelivery {
+  id                 String                 @id @default(uuid()) @db.Uuid
+  integrationEventId String                 @db.Uuid
+  provider           IntegrationProvider
+  endpoint           String
+  headers            Json?
+  payload            Json?
+  status             IntegrationEventStatus @default(RECEIVED)
+  attemptCount       Int                    @default(0)
+  maxAttempts        Int                    @default(5)
+  nextRetryAt        DateTime?
+  deliveredAt        DateTime?
+  failedAt           DateTime?
+  lastError          String?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  integrationEvent   IntegrationEvent       @relation(fields: [integrationEventId], references: [id], onDelete: Cascade)
+  retryQueue         RetryQueue[]
+
+  @@index([provider, status, createdAt])
+  @@index([integrationEventId, createdAt])
+  @@map("webhook_deliveries")
+}
+
+model BackgroundJob {
+  id                 String             @id @default(uuid()) @db.Uuid
+  integrationEventId String?            @db.Uuid
+  provider           IntegrationProvider?
+  jobType            String
+  queueName          String             @default("default")
+  status             BackgroundJobStatus @default(PENDING)
+  payload            Json?
+  result             Json?
+  attemptCount       Int                @default(0)
+  maxAttempts        Int                @default(5)
+  runAt              DateTime           @default(now())
+  startedAt          DateTime?
+  completedAt        DateTime?
+  failedAt           DateTime?
+  lastError          String?
+  retriedByUserId    String?            @db.Uuid
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  integrationEvent   IntegrationEvent?  @relation(fields: [integrationEventId], references: [id], onDelete: SetNull)
+  retriedBy          User?              @relation("BackgroundJobRetriedBy", fields: [retriedByUserId], references: [id], onDelete: SetNull)
+  retryQueue         RetryQueue[]
+
+  @@index([status, runAt])
+  @@index([provider, status, createdAt])
+  @@index([integrationEventId, createdAt])
+  @@map("background_jobs")
+}
+
+model RetryQueue {
+  id                 String            @id @default(uuid()) @db.Uuid
+  sourceType         RetrySourceType
+  sourceId           String            @db.Uuid
+  integrationEventId String?           @db.Uuid
+  webhookDeliveryId  String?           @db.Uuid
+  backgroundJobId    String?           @db.Uuid
+  status             RetryQueueStatus  @default(PENDING)
+  reason             String
+  payload            Json?
+  attemptCount       Int               @default(0)
+  maxAttempts        Int               @default(5)
+  nextAttemptAt      DateTime          @default(now())
+  startedAt          DateTime?
+  completedAt        DateTime?
+  canceledAt         DateTime?
+  failedAt           DateTime?
+  lastError          String?
+  actorUserId        String?           @db.Uuid
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  actor              User?             @relation("RetryQueueActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  integrationEvent   IntegrationEvent? @relation(fields: [integrationEventId], references: [id], onDelete: SetNull)
+  webhookDelivery    WebhookDelivery?  @relation(fields: [webhookDeliveryId], references: [id], onDelete: SetNull)
+  backgroundJob      BackgroundJob?    @relation(fields: [backgroundJobId], references: [id], onDelete: SetNull)
+
+  @@index([status, nextAttemptAt])
+  @@index([sourceType, sourceId])
+  @@index([integrationEventId, createdAt])
+  @@map("retry_queue")
+}
+
+model Lead {
+  id                 String              @id @default(uuid()) @db.Uuid
+  clientUserId       String              @db.Uuid
+  businessProfileId  String              @db.Uuid
+  subject            String
+  messagePreview     String
+  status             LeadStatus          @default(OPEN)
+  respondedAt        DateTime?
+  contactReleasedAt  DateTime?
+  closedAt           DateTime?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  client             User                @relation("LeadClient", fields: [clientUserId], references: [id], onDelete: Cascade)
+  businessProfile    BusinessProfile     @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  messages           LeadMessage[]
+  statusHistory      LeadStatusHistory[]
+  contactReleases    LeadContactRelease[]
+  review             Review?
+  conversation       Conversation?
+
+  @@index([clientUserId, createdAt])
+  @@index([businessProfileId, createdAt])
+  @@index([status])
+  @@map("leads")
+}
+
+model LeadMessage {
+  id          String                @id @default(uuid()) @db.Uuid
+  leadId       String               @db.Uuid
+  senderUserId String               @db.Uuid
+  senderRole   LeadMessageSenderRole
+  body         String
+  createdAt    DateTime             @default(now())
+  lead         Lead                 @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  sender       User                 @relation(fields: [senderUserId], references: [id], onDelete: Cascade)
+
+  @@index([leadId, createdAt])
+  @@map("lead_messages")
+}
+
+model LeadStatusHistory {
+  id          String     @id @default(uuid()) @db.Uuid
+  leadId       String    @db.Uuid
+  fromStatus   LeadStatus?
+  toStatus     LeadStatus
+  actorUserId  String?   @db.Uuid
+  note         String?
+  createdAt    DateTime  @default(now())
+  lead         Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  actor        User?     @relation("LeadStatusActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([leadId, createdAt])
+  @@map("lead_status_history")
+}
+
+model LeadContactRelease {
+  id                 String    @id @default(uuid()) @db.Uuid
+  leadId              String   @db.Uuid
+  actorUserId         String?  @db.Uuid
+  releasedEmail       String?
+  releasedPhone       String?
+  note                String?
+  createdAt           DateTime @default(now())
+  lead                Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  actor               User?    @relation("LeadContactActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([leadId, createdAt])
+  @@map("lead_contact_releases")
+}
+
+model Conversation {
+  id            String                    @id @default(uuid()) @db.Uuid
+  leadId        String                    @unique @db.Uuid
+  lastMessageAt DateTime?
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+  lead          Lead                      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  participants  ConversationParticipant[]
+  messages      ConversationMessage[]
+
+  @@index([lastMessageAt])
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id             String                      @id @default(uuid()) @db.Uuid
+  conversationId String                      @db.Uuid
+  userId         String                      @db.Uuid
+  role           ConversationParticipantRole
+  joinedAt       DateTime                    @default(now())
+  lastReadAt     DateTime?
+  mutedAt        DateTime?
+  conversation   Conversation                @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId, lastReadAt])
+  @@map("conversation_participants")
+}
+
+model ConversationMessage {
+  id             String         @id @default(uuid()) @db.Uuid
+  conversationId String         @db.Uuid
+  senderUserId   String         @db.Uuid
+  body           String
+  createdAt      DateTime       @default(now())
+  editedAt       DateTime?
+  deletedAt      DateTime?
+  conversation   Conversation   @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User           @relation(fields: [senderUserId], references: [id], onDelete: Cascade)
+  attachments    MessageAttachment[]
+
+  @@index([conversationId, createdAt])
+  @@index([senderUserId, createdAt])
+  @@map("conversation_messages")
+}
+
+model MessageAttachment {
+  id          String              @id @default(uuid()) @db.Uuid
+  messageId   String              @db.Uuid
+  fileName    String
+  mimeType    String
+  storageUrl  String
+  sizeBytes   Int
+  createdAt   DateTime            @default(now())
+  message     ConversationMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId, createdAt])
+  @@map("message_attachments")
+}
+
+model StoredFile {
+  id              String            @id @default(uuid()) @db.Uuid
+  ownerUserId     String            @db.Uuid
+  purpose         StoredFilePurpose @default(GENERAL)
+  originalName    String
+  mimeType        String
+  sizeBytes       Int
+  currentVersion  Int               @default(1)
+  isDeleted       Boolean           @default(false)
+  deletedAt       DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  owner           User              @relation("StoredFileOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  versions        DocumentVersion[]
+  evidenceLinks   EvidenceLink[]
+  storageEvents   StorageEvent[]
+  verificationDocuments VerificationDocument[]
+
+  @@index([ownerUserId, createdAt])
+  @@index([purpose, createdAt])
+  @@map("files")
+}
+
+model DocumentVersion {
+  id             String    @id @default(uuid()) @db.Uuid
+  fileId         String    @db.Uuid
+  versionNumber  Int
+  storageUrl     String
+  checksumSha256 String?
+  uploadedByUserId String? @db.Uuid
+  createdAt      DateTime  @default(now())
+  file           StoredFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  uploadedBy     User?      @relation("DocumentVersionUploader", fields: [uploadedByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([fileId, versionNumber])
+  @@index([fileId, createdAt])
+  @@map("document_versions")
+}
+
+model EvidenceLink {
+  id             String             @id @default(uuid()) @db.Uuid
+  fileId         String             @db.Uuid
+  targetType     EvidenceTargetType
+  targetId       String             @db.Uuid
+  description    String?
+  actorUserId    String?            @db.Uuid
+  createdAt      DateTime           @default(now())
+  file           StoredFile         @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  actor          User?              @relation("EvidenceLinkActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([targetType, targetId])
+  @@index([fileId])
+  @@map("evidence_links")
+}
+
+model StorageEvent {
+  id           String           @id @default(uuid()) @db.Uuid
+  fileId        String          @db.Uuid
+  type         StorageEventType
+  versionNumber Int?
+  actorUserId  String?          @db.Uuid
+  metadata     Json?
+  createdAt    DateTime         @default(now())
+  file         StoredFile       @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  actor        User?            @relation("StorageEventActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([fileId, createdAt])
+  @@index([type, createdAt])
+  @@map("storage_events")
+}
+
+model Category {
+  id          String   @id @default(uuid()) @db.Uuid
+  slug        String   @unique
+  name        String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@map("categories")
+}
+
+model City {
+  id          String   @id @default(uuid()) @db.Uuid
+  slug        String   @unique
+  name        String
+  stateCode   String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@map("cities")
+}
+
+model BusinessSearchIndex {
+  id                String             @id @default(uuid()) @db.Uuid
+  businessProfileId String             @unique @db.Uuid
+  slug              String
+  businessName      String
+  headline          String?
+  description       String?
+  citySlug          String?
+  cityName          String?
+  stateCode         String?
+  categorySlugs     String[]
+  searchText        String
+  rankingScore      Float              @default(0)
+  trustScore        Int                @default(0)
+  trustBadge        BadgeLevelCode     @default(NONE)
+  isPublished       Boolean            @default(false)
+  verificationStatus VerificationStatus @default(PENDING_CONTACT_VERIFICATION)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  businessProfile   BusinessProfile    @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+
+  @@index([isPublished, rankingScore])
+  @@index([citySlug])
+  @@map("business_search_index")
+}
+
+model BadgeLevel {
+  id           String         @id @default(uuid()) @db.Uuid
+  code         BadgeLevelCode @unique
+  label        String
+  minScore     Int
+  description  String?
+  displayOrder Int            @default(0)
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  trustScores  TrustScore[]
+
+  @@map("badge_levels")
+}
+
+model TrustScore {
+  id                 String          @id @default(uuid()) @db.Uuid
+  businessProfileId  String          @unique @db.Uuid
+  badgeLevelId       String?         @db.Uuid
+  score              Int             @default(0)
+  isSuspended        Boolean         @default(false)
+  suspensionReason   String?
+  verificationPoints Int             @default(0)
+  profilePoints      Int             @default(0)
+  servicePoints      Int             @default(0)
+  portfolioPoints    Int             @default(0)
+  leadResponsePoints Int             @default(0)
+  reputationPoints   Int             @default(0)
+  penaltyPoints      Int             @default(0)
+  totalLeadCount     Int             @default(0)
+  respondedLeadCount Int             @default(0)
+  responseRate       Float?
+  approvedReviewCount Int            @default(0)
+  averageRating      Float?
+  lastCalculatedAt   DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  businessProfile    BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  badgeLevel         BadgeLevel?     @relation(fields: [badgeLevelId], references: [id], onDelete: SetNull)
+
+  @@index([score])
+  @@index([isSuspended])
+  @@map("trust_scores")
+}
+
+model Review {
+  id                String          @id @default(uuid()) @db.Uuid
+  leadId            String          @unique @db.Uuid
+  clientUserId      String          @db.Uuid
+  businessProfileId String          @db.Uuid
+  status            ReviewStatus    @default(PENDING)
+  rating            Int
+  title             String
+  comment           String
+  submittedAt       DateTime        @default(now())
+  publishedAt       DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  lead              Lead            @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  client            User            @relation("ReviewAuthor", fields: [clientUserId], references: [id], onDelete: Cascade)
+  businessProfile   BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  evidence          ReviewEvidence[]
+  moderation        ReviewModeration?
+
+  @@index([businessProfileId, status, createdAt])
+  @@index([clientUserId, createdAt])
+  @@map("reviews")
+}
+
+model ReviewEvidence {
+  id          String   @id @default(uuid()) @db.Uuid
+  reviewId     String  @db.Uuid
+  note        String
+  reference   String?
+  createdAt   DateTime @default(now())
+  review      Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@index([reviewId, createdAt])
+  @@map("review_evidence")
+}
+
+model ReviewModeration {
+  id                String       @id @default(uuid()) @db.Uuid
+  reviewId          String       @unique @db.Uuid
+  assignedAdminId   String?      @db.Uuid
+  reviewedByUserId  String?      @db.Uuid
+  status            ReviewStatus @default(PENDING)
+  decisionNote      String?
+  requestedAt       DateTime     @default(now())
+  reviewedAt        DateTime?
+  updatedAt         DateTime     @updatedAt
+  review            Review       @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  assignedAdmin     User?        @relation("ReviewAssignedAdmin", fields: [assignedAdminId], references: [id], onDelete: SetNull)
+  reviewedBy        User?        @relation("ReviewReviewedBy", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([status, requestedAt])
+  @@index([assignedAdminId])
+  @@map("review_moderation_queue")
+}
+
+model BadgeEvent {
+  id                   String          @id @default(uuid()) @db.Uuid
+  businessProfileId    String          @db.Uuid
+  actorUserId          String?         @db.Uuid
+  type                 BadgeEventType
+  previousBadgeLevel   BadgeLevelCode?
+  nextBadgeLevel       BadgeLevelCode?
+  scoreBefore          Int?
+  scoreAfter           Int?
+  reason               String?
+  createdAt            DateTime        @default(now())
+  businessProfile      BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  actor                User?           @relation("BadgeEventActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([businessProfileId, createdAt])
+  @@map("badge_events")
+}
+
+model BadgePenalty {
+  id                String          @id @default(uuid()) @db.Uuid
+  businessProfileId String          @db.Uuid
+  actorUserId       String?         @db.Uuid
+  reason            String
+  points            Int
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  businessProfile   BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+  actor             User?           @relation("BadgePenaltyActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([businessProfileId, isActive])
+  @@map("badge_penalties")
+}
+
+model SearchSnapshot {
+  id          String   @id @default(uuid()) @db.Uuid
+  query       String?
+  categorySlug String?
+  citySlug    String?
+  resultsCount Int     @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([categorySlug])
+  @@index([citySlug])
+  @@map("search_snapshots")
+}
+
+model BusinessService {
+  id                String          @id @default(uuid()) @db.Uuid
+  businessProfileId String          @db.Uuid
+  title             String
+  description       String?
+  priceLabel        String?
+  displayOrder      Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  businessProfile   BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+
+  @@index([businessProfileId])
+  @@map("business_services")
+}
+
+model PortfolioItem {
+  id                String          @id @default(uuid()) @db.Uuid
+  businessProfileId String          @db.Uuid
+  title             String
+  description       String?
+  mediaUrl          String?
+  displayOrder      Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  businessProfile   BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+
+  @@index([businessProfileId])
+  @@map("portfolio_items")
+}
+
+model BusinessCategory {
+  id                String          @id @default(uuid()) @db.Uuid
+  businessProfileId String          @db.Uuid
+  name              String
+  displayOrder      Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  businessProfile   BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+
+  @@index([businessProfileId])
+  @@map("business_categories")
+}
+
+model BusinessOwner {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @unique @db.Uuid
+  fullName   String
+  cpf        String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("business_owners")
+}
+
+model Session {
+  id               String    @id @default(uuid()) @db.Uuid
+  userId           String    @db.Uuid
+  refreshTokenHash String    @unique
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  ipAddress        String?
+  userAgent        String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model VerificationRequest {
+  id          String             @id @default(uuid()) @db.Uuid
+  userId      String             @unique @db.Uuid
+  status      VerificationStatus @default(PENDING_CONTACT_VERIFICATION)
+  notes       String?
+  reviewedAt  DateTime?
+  reviewedBy  String?            @db.Uuid
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents   VerificationDocument[]
+
+  @@index([status])
+  @@map("verification_requests")
+}
+
+model VerificationDocument {
+  id                    String              @id @default(uuid()) @db.Uuid
+  verificationRequestId String              @db.Uuid
+  documentType          String
+  fileName              String
+  storageKey            String?
+  latestFileId          String?             @db.Uuid
+  versionNumber         Int                 @default(1)
+  createdAt             DateTime            @default(now())
+  verificationRequest   VerificationRequest @relation(fields: [verificationRequestId], references: [id], onDelete: Cascade)
+  latestFile            StoredFile?         @relation(fields: [latestFileId], references: [id], onDelete: SetNull)
+
+  @@index([verificationRequestId])
+  @@index([latestFileId])
+  @@map("verification_documents")
+}
+
+model OtpCode {
+  id         String     @id @default(uuid()) @db.Uuid
+  userId     String     @db.Uuid
+  channel    OtpChannel
+  codeHash   String
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime   @default(now())
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, channel])
+  @@index([expiresAt])
+  @@map("otp_codes")
+}
+
+model PlatformSetting {
+  id        String   @id @default(uuid()) @db.Uuid
+  key       String   @unique
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("platform_settings")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  action      String
+  actorUserId String?  @db.Uuid
+  entityType  String?
+  entityId    String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  actor       User?    @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model ModerationCase {
+  id              String               @id @default(uuid()) @db.Uuid
+  type            ModerationCaseType
+  status          ModerationCaseStatus @default(OPEN)
+  reporterUserId  String?              @db.Uuid
+  targetType      String
+  targetId        String               @db.Uuid
+  description     String
+  internalNote    String?
+  resolvedAt      DateTime?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  reporter        User?                @relation("ModerationCaseReporter", fields: [reporterUserId], references: [id], onDelete: SetNull)
+  decisions       ModerationDecision[]
+
+  @@index([status, createdAt])
+  @@index([targetType, targetId])
+  @@map("moderation_cases")
+}
+
+model ModerationDecision {
+  id          String         @id @default(uuid()) @db.Uuid
+  caseId      String         @db.Uuid
+  adminUserId String         @db.Uuid
+  decision    String
+  note        String?
+  createdAt   DateTime       @default(now())
+  case        ModerationCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  admin       User           @relation("ModerationDecisionAdmin", fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([caseId, createdAt])
+  @@map("moderation_decisions")
+}
+
+model ProviderDashboardSnapshot {
+  id                  String                     @id @default(uuid()) @db.Uuid
+  businessProfileId   String                     @db.Uuid
+  snapshotDate        DateTime
+  subscriptionStatus  ProviderSubscriptionStatus @default(NOT_ENABLED)
+  isProfilePublished  Boolean                    @default(false)
+  trustScore          Int                        @default(0)
+  openLeadsCount      Int                        @default(0)
+  lateLeadsCount      Int                        @default(0)
+  respondedLeadsCount Int                        @default(0)
+  approvedReviewsCount Int                       @default(0)
+  pendingReviewsCount Int                        @default(0)
+  pendingActionsCount Int                        @default(0)
+  createdAt           DateTime                   @default(now())
+  updatedAt           DateTime                   @updatedAt
+  businessProfile     BusinessProfile            @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([businessProfileId, snapshotDate])
+  @@index([businessProfileId, snapshotDate])
+  @@map("provider_dashboard_snapshots")
+}
+
+model ProviderRecommendation {
+  id                String                         @id @default(uuid()) @db.Uuid
+  businessProfileId String                         @db.Uuid
+  code              String
+  title             String
+  description       String
+  priority          ProviderRecommendationPriority @default(MEDIUM)
+  isActive          Boolean                        @default(true)
+  createdAt         DateTime                       @default(now())
+  updatedAt         DateTime                       @updatedAt
+  businessProfile   BusinessProfile                @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([businessProfileId, code])
+  @@index([businessProfileId, priority, isActive])
+  @@map("provider_recommendations")
+}
+
+model ClientFavorite {
+  id                String          @id @default(uuid()) @db.Uuid
+  clientUserId      String          @db.Uuid
+  businessProfileId String          @db.Uuid
+  createdAt         DateTime        @default(now())
+  client            User            @relation(fields: [clientUserId], references: [id], onDelete: Cascade)
+  businessProfile   BusinessProfile @relation(fields: [businessProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([clientUserId, businessProfileId])
+  @@index([clientUserId, createdAt])
+  @@index([businessProfileId])
+  @@map("client_favorites")
+}
+
+model ClientDashboardView {
+  id                  String   @id @default(uuid()) @db.Uuid
+  clientUserId        String   @db.Uuid
+  snapshotDate        DateTime
+  favoritesCount      Int      @default(0)
+  historyCount        Int      @default(0)
+  pendingReviewsCount Int      @default(0)
+  openReportsCount    Int      @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  client              User     @relation(fields: [clientUserId], references: [id], onDelete: Cascade)
+
+  @@unique([clientUserId, snapshotDate])
+  @@index([clientUserId, snapshotDate])
+  @@map("client_dashboard_views")
+}
+
+model Notification {
+  id                 String                 @id @default(uuid()) @db.Uuid
+  userId             String                 @db.Uuid
+  type               NotificationType
+  title              String
+  body               String
+  metadata           Json?
+  isRead             Boolean                @default(false)
+  readAt             DateTime?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  user               User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveries         NotificationDelivery[]
+
+  @@index([userId, createdAt])
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id                 String   @id @default(uuid()) @db.Uuid
+  userId             String   @unique @db.Uuid
+  inAppEnabled       Boolean  @default(true)
+  emailEnabled       Boolean  @default(true)
+  pushEnabled        Boolean  @default(false)
+  leadAlertsEnabled  Boolean  @default(true)
+  reviewAlertsEnabled Boolean @default(true)
+  marketingEnabled   Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification_preferences")
+}
+
+model NotificationDelivery {
+  id                String                     @id @default(uuid()) @db.Uuid
+  notificationId    String                     @db.Uuid
+  channel           NotificationChannel
+  status            NotificationDeliveryStatus @default(PENDING)
+  provider          String?
+  externalId        String?
+  errorMessage      String?
+  attemptCount      Int                        @default(0)
+  lastAttemptAt     DateTime?
+  deliveredAt       DateTime?
+  createdAt         DateTime                   @default(now())
+  updatedAt         DateTime                   @updatedAt
+  notification      Notification               @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+
+  @@index([notificationId, channel])
+  @@index([status, createdAt])
+  @@map("notification_deliveries")
+}
+
+model CampaignRun {
+  id                String           @id @default(uuid()) @db.Uuid
+  triggeredByUserId String?          @db.Uuid
+  campaignCode      String
+  targetRole        UserRole?
+  title             String
+  body              String
+  metadata          Json?
+  status            CampaignRunStatus @default(QUEUED)
+  recipientsCount   Int              @default(0)
+  deliveredCount    Int              @default(0)
+  failedCount       Int              @default(0)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  triggeredBy       User?            @relation("CampaignRunTriggeredBy", fields: [triggeredByUserId], references: [id], onDelete: SetNull)
+
+  @@index([campaignCode, createdAt])
+  @@index([status, createdAt])
+  @@map("campaign_runs")
+}
+
+// ─────────────────────────────────────────────
+// Module 15 – Growth CMS
+// ─────────────────────────────────────────────
+
+enum PageType {
+  CMS
+  CITY
+  CATEGORY
+}
+
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Page {
+  id              String      @id @default(uuid()) @db.Uuid
+  slug            String      @unique
+  type            PageType    @default(CMS)
+  status          PageStatus  @default(DRAFT)
+  title           String
+  description     String?
+  ogImage         String?
+  seoTitle        String?
+  seoDescription  String?
+  canonicalUrl    String?
+  entitySlug      String?
+  authorId        String?     @db.Uuid
+  publishedAt     DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  sections        PageSection[]
+  author          User?       @relation("PageAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([type, status])
+  @@index([entitySlug])
+  @@map("pages")
+}
+
+model PageSection {
+  id        String   @id @default(uuid()) @db.Uuid
+  pageId    String   @db.Uuid
+  type      String
+  order     Int      @default(0)
+  title     String?
+  body      String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId, order])
+  @@map("page_sections")
+}
+
+model SeoMetadata {
+  id              String   @id @default(uuid()) @db.Uuid
+  entityType      String
+  entitySlug      String
+  title           String
+  description     String?
+  ogImage         String?
+  canonicalUrl    String?
+  structuredData  Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([entityType, entitySlug])
+  @@index([entityType, entitySlug])
+  @@map("seo_metadata")
+}
+
+model CampaignAttribution {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @db.Uuid
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmTerm     String?
+  utmContent  String?
+  landingPage String?
+  referrer    String?
+  createdAt   DateTime  @default(now())
+  user        User      @relation("CampaignAttributionUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([utmCampaign, createdAt])
+  @@map("campaign_attributions")
+}
+
